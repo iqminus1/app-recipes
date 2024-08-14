@@ -1,0 +1,42 @@
+server:
+  port: 80
+spring:
+  datasource:
+    password: 123
+    url: jdbc:postgresql://localhost:5432/recipes_db
+    username: postgres
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: abduganiyev.ismoil001@gmail.com
+    password: lkeu ioml dypp zwed
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  sql:
+    init:
+      mode: always
+  batch:
+    jdbc:
+      initialize-schema: always
+
+app:
+  token:
+    expireDays: 3
+    secretKey: '03d2430e18744da8db2b8dbd64a64977be5c1a7f06d52197c9b8113a3b552c69'
+  admin:
+    username: iqminus1
+    password: 123
+    email: wwxeww1wwxeww@gmail.com
+  url:
+    verification: http://localhost:${server.port}/api/v1/auth/verify-email
+  code:
+    attempt: 5
+
