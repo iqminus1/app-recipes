@@ -28,6 +28,8 @@ public class User extends AbsUUIDEntity implements UserDetails, Serializable {
 
     private String password;
 
+    private String name;
+
     private boolean enable;
 
     private boolean admin;
@@ -39,6 +41,7 @@ public class User extends AbsUUIDEntity implements UserDetails, Serializable {
         if (admin) role = "Admin";
         return List.of(new SimpleGrantedAuthority(role));
     }
+
     @Override
     public String getUsername() {
         return email;

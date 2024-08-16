@@ -31,8 +31,6 @@ app:
   token:
     expireDays: 3
     secretKey: '03d2430e18744da8db2b8dbd64a64977be5c1a7f06d52197c9b8113a3b552c69'
-  url:
-    verification: http://localhost:${server.port}/api/v1/auth/verify-email
   code:
     attempt: 5
 
