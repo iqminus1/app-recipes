@@ -35,19 +35,19 @@ public class AuthServiceImpl implements AuthService {
 
     @Cacheable(value = "user", key = "#username")
     @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.getByUsername(username);
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.getByEmail(email);
     }
 
     @Override
     public ApiResultDTO<?> signIn(SignInDTO signIn) {
         try {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    signIn.getUsername(),
+                    signIn.getEmail(),
                     signIn.getPassword()
             );
             authenticationProvider.authenticate(authentication);
-            String token = jwtProvider.generateToken(signIn.getUsername());
+            String token = jwtProvider.generateToken(signIn.getEmail());
             return ApiResultDTO.success(new TokenDTO(token));
         } catch (AuthenticationException e) {
             throw new RuntimeException(e);
@@ -61,22 +61,21 @@ public class AuthServiceImpl implements AuthService {
             throw new BadRequestException();
         }
         User user = new User(
-                signUp.getUsername(),
-                passwordEncoder.encode(signUp.getPassword()),
                 signUp.getEmail(),
+                passwordEncoder.encode(signUp.getPassword()),
                 false,
                 false
         );
         userRepository.save(user);
-        mailService.sendVerify(signUp.getEmail(), signUp.getUsername());
+        mailService.sendVerify(signUp.getEmail());
         return ApiResultDTO.success("Verify email");
     }
 
     @Override
-    public ApiResultDTO<?> verifyEmail(String username, String code) {
-        User user = userRepository.getByUsername(username);
+    public ApiResultDTO<?> verifyEmail(String email, String code) {
+        User user = userRepository.getByEmail(email);
 
-        Code codeEntity = codeRepository.getByEmail(user.getEmail());
+        Code codeEntity = codeRepository.getByEmail(email);
 
         if (!codeEntity.getCodeString().equals(code)) {
             if (codeEntity.getAttempt() == 1) {

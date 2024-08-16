@@ -9,18 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
 
-    //    @Cacheable(value = "userEntity", key = "#username")
-    default User getByUsername(String username) {
-        return findByUsername(username).orElseThrow(() -> new NotFoundException("User not found by username -> " + username));
+    default User getByEmail(String email) {
+        return findByEmail(email).orElseThrow(() -> new NotFoundException("User not found by username -> " + username));
     }
-
-    @Override
-//    @CachePut(value = "userEntity", key = "#result.username")
-    User save(User user);
-
-    @Override
-//    @CacheEvict(value = "userEntity", key = "#user.username")
-    void delete(User user);
 }

@@ -21,10 +21,10 @@ public class JwtProvider {
     private String secretKeyString;
 
     @Cacheable(value = "tokenGenerate", key = "#username")
-    public String generateToken(String username) {
+    public String generateToken(String email) {
         Date expire = new Date(System.currentTimeMillis() + expireDays * 24 * 60 * 60 * 1000);
         return Jwts.builder()
-                .subject(username)
+                .subject(email)
                 .expiration(expire)
                 .issuedAt(new Date())
                 .signWith(getKey())
