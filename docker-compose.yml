@@ -20,7 +20,7 @@ services:
 
   app:
     build: .
-    container_name: card-processing-service
+    container_name: app-recipes
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/recipes_db
       SPRING_DATASOURCE_USERNAME: postgres
