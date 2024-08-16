@@ -2,7 +2,7 @@ server:
   port: 80
 spring:
   datasource:
-    password: 123
+    password: ismoil_0709
     url: jdbc:postgresql://localhost:5432/recipes_db
     username: postgres
   mail:
