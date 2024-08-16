@@ -49,7 +49,7 @@ public class SecurityConfig {
 
     @Bean
     @SneakyThrows
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(registry ->
                 registry.requestMatchers(AppConst.API_V1 + "/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
