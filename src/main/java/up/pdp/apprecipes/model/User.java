@@ -24,11 +24,9 @@ import java.util.Objects;
 @SQLDelete(sql = "update users set deleted = true where id = ?")
 public class User extends AbsUUIDEntity implements UserDetails, Serializable {
 
-    private String username;
+    private String email;
 
     private String password;
-
-    private String email;
 
     private boolean enable;
 
@@ -40,6 +38,10 @@ public class User extends AbsUUIDEntity implements UserDetails, Serializable {
         String role = "User";
         if (admin) role = "Admin";
         return List.of(new SimpleGrantedAuthority(role));
+    }
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override
