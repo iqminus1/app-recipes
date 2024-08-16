@@ -23,9 +23,6 @@ public class MailServiceImpl implements MailService {
     @Value("${app.code.attempt}")
     private Integer attempt;
 
-    @Value("${app.url.verification}")
-    private String verificationUrl;
-
     @Async
     @Override
     public void sendVerify(String email) {

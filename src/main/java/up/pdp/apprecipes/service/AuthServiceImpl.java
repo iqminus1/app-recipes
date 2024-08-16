@@ -33,7 +33,6 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationProvider authenticationProvider;
     private final JwtProvider jwtProvider;
 
-    @Cacheable(value = "user", key = "#username")
     @Override
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.getByEmail(email);
@@ -63,6 +62,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User(
                 signUp.getEmail(),
                 passwordEncoder.encode(signUp.getPassword()),
+                signUp.getName(),
                 false,
                 false
         );
