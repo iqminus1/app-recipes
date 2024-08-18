@@ -6,8 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.ApiResultDTO;
-import up.pdp.apprecipes.dto.AttachmentDTO;
+import up.pdp.apprecipes.dto.ApiResultDto;
+import up.pdp.apprecipes.dto.AttachmentDto;
 import up.pdp.apprecipes.mapper.DefaultMapper;
 import up.pdp.apprecipes.model.Attachment;
 import up.pdp.apprecipes.repository.AttachmentRepository;
@@ -29,7 +29,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final DefaultMapper defaultMapper;
 
     @Override
-    public void read(HttpServletResponse resp, Integer id) {
+    public void read(HttpServletResponse resp, UUID id) {
         Attachment attachment = attachmentRepository.getById(id);
         try {
             Path path = Path.of(attachment.getPath());
@@ -40,36 +40,37 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public ApiResultDTO<?> create(HttpServletRequest req) {
+    public ApiResultDto<?> create(HttpServletRequest req) {
         try {
-            List<AttachmentDTO> result = req.getParts().stream()
+            List<AttachmentDto> result = req.getParts().stream()
                     .map(part -> createOrUpdate(new Attachment(), part, false))
                     .toList();
-            return ApiResultDTO.success(result);
+            return ApiResultDto.success(result);
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }
     }
 
+
     @Override
-    public ApiResultDTO<?> update(HttpServletRequest req, Integer id) {
+    public ApiResultDto<?> update(HttpServletRequest req, UUID id) {
         try {
             Attachment attachment = attachmentRepository.getById(id);
-            List<AttachmentDTO> result = req.getParts().stream()
+            List<AttachmentDto> result = req.getParts().stream()
                     .map(part -> createOrUpdate(attachment, part, true)).toList();
-            return ApiResultDTO.success(result);
+            return ApiResultDto.success(result);
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(UUID id) {
         Attachment attachment = attachmentRepository.getById(id);
         attachmentRepository.delete(attachment);
     }
 
-    private AttachmentDTO createOrUpdate(Attachment attachment, Part part, boolean isUpdate) {
+    private AttachmentDto createOrUpdate(Attachment attachment, Part part, boolean isUpdate) {
         if (isUpdate) {
             Attachment copyAttachment = new Attachment(
                     attachment.getName(),

@@ -9,10 +9,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.ApiResultDTO;
-import up.pdp.apprecipes.dto.SignInDTO;
-import up.pdp.apprecipes.dto.SignUpDTO;
-import up.pdp.apprecipes.dto.TokenDTO;
+import up.pdp.apprecipes.dto.ApiResultDto;
+import up.pdp.apprecipes.dto.SignInDto;
+import up.pdp.apprecipes.dto.SignUpDto;
+import up.pdp.apprecipes.dto.TokenDto;
 import up.pdp.apprecipes.model.Code;
 import up.pdp.apprecipes.model.User;
 import up.pdp.apprecipes.repository.CodeRepository;
@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ApiResultDTO<?> signIn(SignInDTO signIn) {
+    public ApiResultDto<?> signIn(SignInDto signIn) {
         try {
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     signIn.getEmail(),
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
             );
             authenticationProvider.authenticate(authentication);
             String token = jwtProvider.generateToken(signIn.getEmail());
-            return ApiResultDTO.success(new TokenDTO(token));
+            return ApiResultDto.success(new TokenDto(token));
         } catch (AuthenticationException e) {
             throw new RuntimeException(e);
         }
@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
 
     @SneakyThrows
     @Override
-    public ApiResultDTO<?> signUp(SignUpDTO signUp) {
+    public ApiResultDto<?> signUp(SignUpDto signUp) {
         if (!Objects.equals(signUp.getPassword(), signUp.getAcceptedPassword())) {
             throw new BadRequestException();
         }
@@ -69,11 +69,11 @@ public class AuthServiceImpl implements AuthService {
         );
         userRepository.save(user);
         mailService.sendVerify(signUp.getEmail());
-        return ApiResultDTO.success("Verify email");
+        return ApiResultDto.success("Verify email");
     }
 
     @Override
-    public ApiResultDTO<?> verifyEmail(String email, String code) {
+    public ApiResultDto<?> verifyEmail(String email, String code) {
         User user = userRepository.getByEmail(email);
 
         Code codeEntity = codeRepository.getByEmail(email);
@@ -82,11 +82,11 @@ public class AuthServiceImpl implements AuthService {
             if (codeEntity.getAttempt() == 1) {
                 codeRepository.delete(codeEntity);
                 userRepository.delete(user);
-                return ApiResultDTO.error("Your attempt ended");
+                return ApiResultDto.error("Your attempt ended");
             }
             codeEntity.setAttempt(codeEntity.getAttempt() - 1);
             codeRepository.save(codeEntity);
-            return ApiResultDTO.error("Code not equals");
+            return ApiResultDto.error("Code not equals");
         }
 
         codeRepository.delete(codeEntity);
@@ -94,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
         user.setEnable(true);
         userRepository.save(user);
 
-        return ApiResultDTO.success("Ok");
+        return ApiResultDto.success("Ok");
     }
 
 }
