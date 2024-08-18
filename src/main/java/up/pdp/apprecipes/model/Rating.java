@@ -23,5 +23,8 @@ import up.pdp.apprecipes.model.templates.AbsUUIDEntity;
 @SQLDelete(sql = "update rating set deleted = true where id = ?")
 public class Rating extends AbsUUIDEntity {
     @ManyToOne
-    private User ratedBy;
+    private User rater;
+    @ManyToOne
+    private Product product;
+    private Double rating;
 }
