@@ -2,7 +2,7 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.StepDto;
+import up.pdp.apprecipes.dto.StepCrudDto;
 import up.pdp.apprecipes.exceptions.NotFoundException;
 import up.pdp.apprecipes.model.Step;
 import up.pdp.apprecipes.repository.StepRepository;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class StepServiceImpl implements StepService {
     private final StepRepository stepRepository;
     @Override
-    public Step save(StepDto dto) {
+    public Step save(StepCrudDto dto) {
         return Step.builder()
                 .step(dto.getStep())
                 .description(dto.getDescription())
@@ -24,10 +24,10 @@ public class StepServiceImpl implements StepService {
     }
 
     @Override
-    public StepDto getById(UUID id) {
+    public StepCrudDto getById(UUID id) {
         Step step = stepRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Step"));
-        return new StepDto(step);
+        return new StepCrudDto(step);
     }
 
     @Override
