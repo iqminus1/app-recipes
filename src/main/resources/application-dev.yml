@@ -1,10 +1,18 @@
 server:
   port: 80
+
 spring:
+  data:
+    redis:
+      port: 6379
+      host: redis_1  # Use the service name defined in docker-compose.yml
+
   datasource:
+    driver-class-name: org.postgresql.Driver
     password: ismoil_0709
-    url: jdbc:postgresql://localhost:5432/recipes_db
+    url: jdbc:postgresql://postgres_1:5432/recipes_db  # Use the service name here
     username: postgres
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -16,13 +24,16 @@ spring:
           starttls:
             enable: true
           auth: true
+
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
+
   sql:
     init:
-      mode: always
+      mode: never
+
   batch:
     jdbc:
       initialize-schema: always

@@ -3,6 +3,7 @@ package up.pdp.apprecipes.model;
 import jakarta.persistence.Entity;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
+import jakarta.persistence.Table;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +20,8 @@ import java.util.Objects;
 @Setter
 @Getter
 @ToString
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 @SQLRestriction("deleted = false")
 @SQLDelete(sql = "update users set deleted = true where id = ?")
 public class User extends AbsUUIDEntity implements UserDetails, Serializable {
