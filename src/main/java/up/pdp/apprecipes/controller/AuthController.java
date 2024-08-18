@@ -29,5 +29,4 @@ public class AuthController {
     public ResponseEntity<?> verifyEmail(@RequestParam String username, @RequestParam String code) {
         return ResponseEntity.status(200).body(authService.verifyEmail(username, code));
     }
-
 }
