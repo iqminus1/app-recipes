@@ -1,4 +1,4 @@
-package up.pdp.apprecipes.config;
+package up.pdp.apprecipes.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,12 +27,12 @@ public class AttachmentController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(HttpServletRequest req, @PathVariable Integer id) {
+    public ResponseEntity<?> update(HttpServletRequest req, @PathVariable UUID id) {
         return ResponseEntity.status(200).body(attachmentService.update(req, id));
     }
 
     @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Integer id) {
+    public void delete(@PathVariable UUID id) {
         attachmentService.delete(id);
     }
 }

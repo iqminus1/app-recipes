@@ -51,8 +51,9 @@ public class AttachmentServiceImpl implements AttachmentService {
         }
     }
 
+
     @Override
-    public ApiResultDto<?> update(HttpServletRequest req, Integer id) {
+    public ApiResultDto<?> update(HttpServletRequest req, UUID id) {
         try {
             Attachment attachment = attachmentRepository.getById(id);
             List<AttachmentDto> result = req.getParts().stream()
@@ -64,7 +65,7 @@ public class AttachmentServiceImpl implements AttachmentService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(UUID id) {
         Attachment attachment = attachmentRepository.getById(id);
         attachmentRepository.delete(attachment);
     }

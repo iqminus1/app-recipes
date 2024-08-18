@@ -5,17 +5,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class AttachmentDto implements Serializable {
-    Integer id;
-    boolean deleted;
-    String name;
-    String originalName;
-    String path;
-    String contentType;
-    Long size;
+    private UUID id;
+    private boolean deleted;
+    private String name;
+    private String originalName;
+    private String path;
+    private String contentType;
+    private Long size;
 }
