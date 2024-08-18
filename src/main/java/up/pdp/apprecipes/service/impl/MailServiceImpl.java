@@ -1,4 +1,4 @@
-package up.pdp.apprecipes.service;
+package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +9,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import up.pdp.apprecipes.model.Code;
 import up.pdp.apprecipes.repository.CodeRepository;
+import up.pdp.apprecipes.service.MailService;
 
 import java.util.Random;
 

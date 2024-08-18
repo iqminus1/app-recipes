@@ -1,4 +1,4 @@
-package up.pdp.apprecipes.service;
+package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -18,6 +18,8 @@ import up.pdp.apprecipes.model.User;
 import up.pdp.apprecipes.repository.CodeRepository;
 import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.security.JwtProvider;
+import up.pdp.apprecipes.service.AuthService;
+import up.pdp.apprecipes.service.MailService;
 
 import java.util.Objects;
 
