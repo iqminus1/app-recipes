@@ -64,6 +64,8 @@ public class AuthServiceImpl implements AuthService {
                 signUp.getEmail(),
                 passwordEncoder.encode(signUp.getPassword()),
                 signUp.getName(),
+                null,
+                null,
                 false,
                 false
         );
@@ -106,6 +108,10 @@ public class AuthServiceImpl implements AuthService {
             user.setEmail(crudDto.getEmail());
         if (crudDto.getPassword() != null)
             user.setPassword(passwordEncoder.encode(crudDto.getPassword()));
+        if (crudDto.getName() != null)
+            user.setName(crudDto.getName());
+        if (crudDto.getLocation() != null)
+            user.setLocation(crudDto.getLocation());
 
         userRepository.save(user);
         return ApiResultDto.success("Ok");
