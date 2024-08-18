@@ -1,4 +1,4 @@
-package up.pdp.apprecipes.service;
+package up.pdp.apprecipes.service.impl;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +11,7 @@ import up.pdp.apprecipes.dto.AttachmentDTO;
 import up.pdp.apprecipes.mapper.DefaultMapper;
 import up.pdp.apprecipes.model.Attachment;
 import up.pdp.apprecipes.repository.AttachmentRepository;
+import up.pdp.apprecipes.service.AttachmentService;
 
 import java.io.IOException;
 import java.nio.file.Files;
