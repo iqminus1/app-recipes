@@ -30,6 +30,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Category getByName(String name) {
+        return categoryRepository.findByName(name)
+                .orElseThrow(() -> new NotFoundException("Category"));
+    }
+
+    @Override
     public List<Category> getAll() {
         return categoryRepository.findAll();
     }

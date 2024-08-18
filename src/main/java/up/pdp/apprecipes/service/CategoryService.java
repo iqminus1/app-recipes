@@ -9,6 +9,7 @@ import java.util.UUID;
 public interface CategoryService {
     Category save(Category category);
     Category getById(UUID id);
+    Category getByName(String name);
     List<Category> getAll();
     void delete(Category category);
 }
