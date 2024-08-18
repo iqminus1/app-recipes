@@ -6,9 +6,16 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class TokenDTO implements Serializable {
-    private String token;
+public class AttachmentDto implements Serializable {
+    Integer id;
+    boolean deleted;
+    String name;
+    String originalName;
+    String path;
+    String contentType;
+    Long size;
 }

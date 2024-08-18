@@ -9,7 +9,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class FieldErrorDTO implements Serializable {
-    private String field;
-    private String errorMessage;
+public class SignInDto implements Serializable {
+    private String email;
+    private String password;
 }

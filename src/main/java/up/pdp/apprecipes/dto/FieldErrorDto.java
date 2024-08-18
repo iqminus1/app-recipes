@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class SignUpDTO {
-    private String email;
-    private String name;
-    private String password;
-    private String acceptedPassword;
+public class FieldErrorDto implements Serializable {
+    private String field;
+    private String errorMessage;
 }
