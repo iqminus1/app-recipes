@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import up.pdp.apprecipes.service.AttachmentService;
 import up.pdp.apprecipes.utils.AppConst;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(AppConst.API_V1 + "/attachment")
@@ -15,7 +17,7 @@ public class AttachmentController {
     private final AttachmentService attachmentService;
 
     @GetMapping("/read/{id}")
-    public void read(@PathVariable Integer id, HttpServletResponse resp) {
+    public void read(@PathVariable UUID id, HttpServletResponse resp) {
         attachmentService.read(resp, id);
     }
 

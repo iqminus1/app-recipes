@@ -13,5 +13,5 @@ public interface IngredientService {
     List<Ingredient> findAll();
     Ingredient findById(UUID id);
     Ingredient findByName(String name);
-    Ingredient deleteById(UUID id);
+    void deleteById(UUID id);
 }

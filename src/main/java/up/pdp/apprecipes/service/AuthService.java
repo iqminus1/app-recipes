@@ -1,14 +1,14 @@
 package up.pdp.apprecipes.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
-import up.pdp.apprecipes.dto.ApiResultDTO;
-import up.pdp.apprecipes.dto.SignInDTO;
-import up.pdp.apprecipes.dto.SignUpDTO;
+import up.pdp.apprecipes.dto.ApiResultDto;
+import up.pdp.apprecipes.dto.SignInDto;
+import up.pdp.apprecipes.dto.SignUpDto;
 
 public interface AuthService extends UserDetailsService {
-    ApiResultDTO<?> signIn(SignInDTO signUp);
+    ApiResultDto<?> signIn(SignInDto signUp);
 
-    ApiResultDTO<?> signUp(SignUpDTO signIn);
+    ApiResultDto<?> signUp(SignUpDto signIn);
 
-    ApiResultDTO<?> verifyEmail(String email, String code);
+    ApiResultDto<?> verifyEmail(String email, String code);
 }

@@ -15,31 +15,31 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResultDTO<T> implements Serializable {
+public class ApiResultDto<T> implements Serializable {
     private boolean success;
     private T data;
     private String errorMessage;
-    private List<FieldErrorDTO> fieldErrors;
+    private List<FieldErrorDto> fieldErrors;
 
-    public static <T> ApiResultDTO<T> success(T data) {
-        ApiResultDTO<T> apiResultDTO = new ApiResultDTO<>();
+    public static <T> ApiResultDto<T> success(T data) {
+        ApiResultDto<T> apiResultDTO = new ApiResultDto<>();
         apiResultDTO.setSuccess(true);
         apiResultDTO.setData(data);
         return apiResultDTO;
     }
 
-    public static ApiResultDTO<?> error(String errorMessage) {
-        ApiResultDTO<?> apiResultDTO = new ApiResultDTO<>();
+    public static ApiResultDto<?> error(String errorMessage) {
+        ApiResultDto<?> apiResultDTO = new ApiResultDto<>();
         apiResultDTO.setErrorMessage(errorMessage);
         return apiResultDTO;
     }
 
-    public static ApiResultDTO<?> error(MethodArgumentNotValidException exception) {
-        List<FieldErrorDTO> fieldErrors = new ArrayList<>();
+    public static ApiResultDto<?> error(MethodArgumentNotValidException exception) {
+        List<FieldErrorDto> fieldErrors = new ArrayList<>();
         for (FieldError fieldError : exception.getFieldErrors()) {
-            fieldErrors.add(new FieldErrorDTO(fieldError.getField(), fieldError.getDefaultMessage()));
+            fieldErrors.add(new FieldErrorDto(fieldError.getField(), fieldError.getDefaultMessage()));
         }
-        ApiResultDTO<?> apiResultDTO = new ApiResultDTO<>();
+        ApiResultDto<?> apiResultDTO = new ApiResultDto<>();
         apiResultDTO.setFieldErrors(fieldErrors);
         return apiResultDTO;
     }
