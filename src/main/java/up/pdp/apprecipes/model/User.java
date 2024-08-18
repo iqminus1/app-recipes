@@ -1,9 +1,10 @@
 package up.pdp.apprecipes.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import jakarta.persistence.Table;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,6 +32,11 @@ public class User extends AbsUUIDEntity implements UserDetails, Serializable {
     private String password;
 
     private String name;
+
+    @OneToOne
+    private Attachment attachment;
+
+    private String location;
 
     private boolean enable;
 
