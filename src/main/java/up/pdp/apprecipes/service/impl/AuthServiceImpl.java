@@ -6,15 +6,14 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.ApiResultDto;
-import up.pdp.apprecipes.dto.SignInDto;
-import up.pdp.apprecipes.dto.SignUpDto;
-import up.pdp.apprecipes.dto.TokenDto;
+import up.pdp.apprecipes.dto.*;
 import up.pdp.apprecipes.model.Code;
 import up.pdp.apprecipes.model.User;
+import up.pdp.apprecipes.repository.AttachmentRepository;
 import up.pdp.apprecipes.repository.CodeRepository;
 import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.security.JwtProvider;
@@ -33,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
     private final CodeRepository codeRepository;
     private final AuthenticationProvider authenticationProvider;
     private final JwtProvider jwtProvider;
+    private final AttachmentRepository attachmentRepository;
 
     @Override
     public User loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -94,6 +94,20 @@ public class AuthServiceImpl implements AuthService {
         user.setEnable(true);
         userRepository.save(user);
 
+        return ApiResultDto.success("Ok");
+    }
+
+    @Override
+    public ApiResultDto<?> update(UserCRUDDto crudDto) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (crudDto.getAttachmentId() != null)
+            user.setAttachment(attachmentRepository.getById(crudDto.getAttachmentId()));
+        if (crudDto.getEmail() != null)
+            user.setEmail(crudDto.getEmail());
+        if (crudDto.getPassword() != null)
+            user.setPassword(passwordEncoder.encode(crudDto.getPassword()));
+
+        userRepository.save(user);
         return ApiResultDto.success("Ok");
     }
 
