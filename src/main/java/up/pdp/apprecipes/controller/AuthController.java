@@ -27,7 +27,7 @@ public class AuthController {
         return ResponseEntity.status(200).body(authService.signIn(signIn));
     }
 
-    @GetMapping("/verify/email")
+    @PostMapping("/verify/email")
     public ResponseEntity<?> verifyEmail(@RequestBody VerifyEmailDto dto) {
         return ResponseEntity.status(200).body(authService.verifyEmail(dto.getEmail(),dto.getCode()));
     }
