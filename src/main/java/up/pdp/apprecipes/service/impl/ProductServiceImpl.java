@@ -1,15 +1,12 @@
 package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
+import up.pdp.apprecipes.model.*;
 import org.springframework.stereotype.Service;
 import up.pdp.apprecipes.dto.ProductCrudDto;
 import up.pdp.apprecipes.exceptions.NotFoundException;
-import up.pdp.apprecipes.model.Attachment;
-import up.pdp.apprecipes.model.Category;
-import up.pdp.apprecipes.model.Ingredient;
-import up.pdp.apprecipes.model.Product;
-import up.pdp.apprecipes.model.Step;
-import up.pdp.apprecipes.model.User;
+import up.pdp.apprecipes.model.enums.TimeFilter;
 import up.pdp.apprecipes.repository.AttachmentRepository;
 import up.pdp.apprecipes.repository.CategoryRepository;
 import up.pdp.apprecipes.repository.IngredientRepository;
@@ -17,7 +14,9 @@ import up.pdp.apprecipes.repository.ProductRepository;
 import up.pdp.apprecipes.repository.StepRepository;
 import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.service.ProductService;
+import up.pdp.apprecipes.specification.ProductSpecification;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,6 +74,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public List<Product> getAllBySpec(TimeFilter timeFilter, Category category, Rating rating) {
+        Specification<Product> spec = Specification.where(ProductSpecification.byCategory(category))
+                .and(ProductSpecification.byRating(rating))
+                .and(ProductSpecification.filterTime(timeFilter));
+        return productRepository.findAll(spec);
     }
 
     @Override

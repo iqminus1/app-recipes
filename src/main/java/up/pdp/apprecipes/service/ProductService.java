@@ -1,5 +1,8 @@
 package up.pdp.apprecipes.service;
 
+import up.pdp.apprecipes.model.Category;
+import up.pdp.apprecipes.model.Rating;
+import up.pdp.apprecipes.model.enums.TimeFilter;
 import up.pdp.apprecipes.dto.ProductCrudDto;
 import up.pdp.apprecipes.model.Product;
 
@@ -11,5 +14,6 @@ public interface ProductService {
     Product getById(UUID id);
     List<Product> getByAuthorId(UUID id);
     List<Product> getAll();
+    List<Product> getAllBySpec(TimeFilter timeFilter, Category category, Rating rating);
     void delete(UUID id);
 }
