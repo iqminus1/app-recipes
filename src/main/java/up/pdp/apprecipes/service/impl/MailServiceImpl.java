@@ -30,26 +30,14 @@ public class MailServiceImpl implements MailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("Recipes");
-        String codeString = generatePassword();
-        Code code = new Code(email, codeString, attempt);
-        message.setText("Your verification code: -> "+codeString);
+        Integer codeInt = generatePassword();
+        Code code = new Code(email, codeInt.toString(), attempt);
+        message.setText("Your verification code: -> "+codeInt);
         mailSender.send(message);
         codeRepository.save(code);
     }
 
-    private String generatePassword() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            if (random.nextBoolean()) {
-                sb.append(random.nextInt(0, 9));
-            } else {
-                if (random.nextBoolean()) {
-                    sb.append((char) random.nextInt(65, 90));
-                } else {
-                    sb.append((char) random.nextInt(97, 122));
-                }
-            }
-        }
-        return sb.toString();
+    private Integer generatePassword() {
+        return new Random().nextInt(9000) + 1000;
     }
 }
