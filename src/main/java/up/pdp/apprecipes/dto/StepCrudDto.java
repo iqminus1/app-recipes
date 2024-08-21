@@ -6,11 +6,11 @@ import up.pdp.apprecipes.model.Step;
 
 @AllArgsConstructor
 @Getter
-public class StepDto {
+public class StepCrudDto {
     private Integer step;
     private String description;
 
-    public StepDto(Step step) {
+    public StepCrudDto(Step step) {
         this.step = step.getStep();
         this.description = step.getDescription();
     }
