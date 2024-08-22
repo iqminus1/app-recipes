@@ -1,14 +1,13 @@
 package up.pdp.apprecipes.service;
 
-import up.pdp.apprecipes.dto.StepCrudDto;
-import up.pdp.apprecipes.model.Step;
+import up.pdp.apprecipes.dto.StepDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface StepService {
-    Step save(StepCrudDto step);
-    StepCrudDto getById(UUID id);
-    List<Step> getAll();
+    StepDto save(StepDto stepDto);
+    StepDto getById(UUID id);
+    List<StepDto> getAll();
     void deleteById(UUID id);
 }

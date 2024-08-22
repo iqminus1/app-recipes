@@ -6,40 +6,40 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import up.pdp.apprecipes.dto.request.IngredientCRUDDto;
+import up.pdp.apprecipes.dto.StepDto;
 import up.pdp.apprecipes.dto.response.SuccessResponse;
-import up.pdp.apprecipes.service.IngredientService;
+import up.pdp.apprecipes.service.StepService;
 import up.pdp.apprecipes.utils.AppConst;
 
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(AppConst.API_V1 + "/ingredient")
-public class IngredientController {
-    private final IngredientService ingredientService;
+@RequestMapping(AppConst.API_V1 + "/step")
+public class StepController {
+    private final StepService stepService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(IngredientCRUDDto ingredient) {
-        return ResponseEntity.ok(ingredientService.save(ingredient));
+    public ResponseEntity<?> save(@RequestBody StepDto step) {
+        return ResponseEntity.ok(stepService.save(step));
     }
-    @GetMapping("/all")
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(ingredientService.findAll());
-    }
+
     @GetMapping("/id/{id}")
     public ResponseEntity<?> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(ingredientService.findById(id));
+        return ResponseEntity.ok(stepService.getById(id));
     }
-    @GetMapping("/name/{name}")
-    public ResponseEntity<?> findByName(@PathVariable String name) {
-        return ResponseEntity.ok(ingredientService.findByName(name));
+
+    @GetMapping("/all")
+    public ResponseEntity<?> findAll() {
+        return ResponseEntity.ok(stepService.getAll());
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
-        ingredientService.deleteById(id);
-        return ResponseEntity.ok(new SuccessResponse("Ingredient successfully deleted"));
+        stepService.deleteById(id);
+        return ResponseEntity.ok(new SuccessResponse("Step successfully deleted"));
     }
 }

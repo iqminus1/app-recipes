@@ -1,4 +1,4 @@
-package up.pdp.apprecipes.dto;
+package up.pdp.apprecipes.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

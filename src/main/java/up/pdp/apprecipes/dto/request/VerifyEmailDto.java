@@ -1,4 +1,4 @@
-package up.pdp.apprecipes.dto;
+package up.pdp.apprecipes.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

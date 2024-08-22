@@ -1,16 +1,15 @@
 package up.pdp.apprecipes.service;
 
-import up.pdp.apprecipes.dto.CategoryCrudDto;
-import up.pdp.apprecipes.model.Category;
+import up.pdp.apprecipes.dto.CategoryDto;
 
 import java.util.List;
 import java.util.UUID;
 
 
 public interface CategoryService {
-    Category save(CategoryCrudDto category);
-    Category getById(UUID id);
-    Category getByName(String name);
-    List<Category> getAll();
+    CategoryDto save(CategoryDto category);
+    CategoryDto getById(UUID id);
+    CategoryDto getByName(String name);
+    List<CategoryDto> getAll();
     void delete(UUID id);
 }

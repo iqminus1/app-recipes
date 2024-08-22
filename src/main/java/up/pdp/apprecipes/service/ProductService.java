@@ -1,15 +1,14 @@
 package up.pdp.apprecipes.service;
 
-import up.pdp.apprecipes.dto.ProductCrudDto;
-import up.pdp.apprecipes.model.Product;
+import up.pdp.apprecipes.dto.ProductDto;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
-    Product save(ProductCrudDto productCrudDto);
-    Product getById(UUID id);
-    List<Product> getByAuthorId(UUID id);
-    List<Product> getAll();
+    ProductDto save(ProductDto productDto);
+    ProductDto getById(UUID id);
+    List<ProductDto> getAll();
+    List<ProductDto> getAllByAuthorId(UUID id);
     void delete(UUID id);
 }

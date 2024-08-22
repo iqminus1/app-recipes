@@ -2,8 +2,7 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.ProductCrudDto;
-import up.pdp.apprecipes.exceptions.NotFoundException;
+import up.pdp.apprecipes.dto.ProductDto;
 import up.pdp.apprecipes.model.Attachment;
 import up.pdp.apprecipes.model.Category;
 import up.pdp.apprecipes.model.Ingredient;
@@ -32,53 +31,51 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public Product save(ProductCrudDto productCrudDto) {
-        Category category = categoryRepository.findById(productCrudDto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category"));
+    public ProductDto save(ProductDto productDto) {
+        Category category = categoryRepository.getById(productDto.getCategoryId());
+        Attachment attachment = attachmentRepository.getById(productDto.getAttachmentId());
+        User author = userRepository.getById(productDto.getAuthorId());
 
-        Attachment attachment = attachmentRepository.findById(productCrudDto.getAttachmentId())
-                .orElseThrow(() -> new NotFoundException("Attachment"));
-
-        User author = userRepository.findById(productCrudDto.getAuthorId())
-                .orElseThrow(() -> new NotFoundException("Author"));
-
-        List<Ingredient> ingredients = ingredientRepository.findAllById(productCrudDto.getIngredientIds());
-
-        List<Step> steps = stepRepository.findAllById(productCrudDto.getStepIds());
+        List<Ingredient> ingredients = ingredientRepository.findAllById(productDto.getIngredientIds());
+        List<Step> steps = stepRepository.findAllById(productDto.getStepIds());
 
         Product product = Product.builder()
-                .name(productCrudDto.getName())
+                .name(productDto.getName())
                 .category(category)
                 .attachment(attachment)
-                .preparationTime(productCrudDto.getPreparationTime())
+                .preparationTime(productDto.getPreparationTime())
                 .ingredients(ingredients)
                 .author(author)
                 .steps(steps)
                 .build();
 
-        return productRepository.save(product);
+        return new ProductDto(productRepository.save(product));
     }
 
     @Override
-    public Product getById(UUID id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Product"));
+    public ProductDto getById(UUID id) {
+        return new ProductDto(productRepository.getById(id));
     }
 
     @Override
-    public List<Product> getByAuthorId(UUID id) {
-        userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Author"));
-        return productRepository.findByAuthorId(id);
+    public List<ProductDto> getAll() {
+        return productRepository.findAll()
+                .stream()
+                .map(ProductDto::new)
+                .toList();
     }
 
     @Override
-    public List<Product> getAll() {
-        return productRepository.findAll();
+    public List<ProductDto> getAllByAuthorId(UUID id) {
+        userRepository.getById(id);
+        return productRepository.findAllByAuthorId(id)
+                .stream()
+                .map(ProductDto::new)
+                .toList();
     }
 
     @Override
     public void delete(UUID id) {
-        productRepository.deleteById(id);
+        productRepository.delete(productRepository.getById(id));
     }
 }

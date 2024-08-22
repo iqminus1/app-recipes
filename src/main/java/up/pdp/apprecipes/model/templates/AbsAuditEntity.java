@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 @Getter
 @MappedSuperclass
@@ -16,8 +17,8 @@ import java.io.Serializable;
 public abstract class AbsAuditEntity extends AbsDateEntity implements Serializable {
     @CreatedBy
     @Column(updatable = false)
-    private Integer createBy;
+    private UUID createBy;
 
     @LastModifiedBy
-    private Integer updateBy;
+    private UUID updateBy;
 }

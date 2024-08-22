@@ -2,8 +2,7 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.RatingCrudDto;
-import up.pdp.apprecipes.exceptions.NotFoundException;
+import up.pdp.apprecipes.dto.RatingDto;
 import up.pdp.apprecipes.model.Product;
 import up.pdp.apprecipes.model.Rating;
 import up.pdp.apprecipes.model.User;
@@ -23,12 +22,9 @@ public class RatingServiceImpl implements RatingService {
     private final ProductRepository productRepository;
 
     @Override
-    public Rating save(RatingCrudDto ratingDto) {
-        User rater = userRepository.findById(ratingDto.getRaterId())
-                .orElseThrow(() -> new NotFoundException("Rating"));
-
-        Product product = productRepository.findById(ratingDto.getProductId())
-                .orElseThrow(() -> new NotFoundException("Product"));
+    public RatingDto save(RatingDto ratingDto) {
+        User rater = userRepository.getById(ratingDto.getRaterId());
+        Product product = productRepository.getById(ratingDto.getProductId());
 
         Rating rating = Rating.builder()
                 .rater(rater)
@@ -36,29 +32,32 @@ public class RatingServiceImpl implements RatingService {
                 .rating(ratingDto.getRating())
                 .build();
 
-        return ratingRepository.save(rating);
+        return new RatingDto(ratingRepository.save(rating));
     }
 
     @Override
-    public Rating getById(UUID id) {
-        return ratingRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Rating"));
+    public RatingDto getById(UUID id) {
+        return new RatingDto(ratingRepository.getById(id));
     }
 
     @Override
-    public List<Rating> getAll() {
-        return ratingRepository.findAll();
+    public List<RatingDto> getAll() {
+        return ratingRepository.findAll()
+                .stream()
+                .map(RatingDto::new)
+                .toList();
     }
 
     @Override
-    public List<Rating> getAllByRaterId(UUID raterId) {
-        return ratingRepository.findAllRatingsByRaterId(raterId);
+    public List<RatingDto> getAllByRaterId(UUID raterId) {
+        return ratingRepository.findAllRatingsByRaterId(raterId)
+                .stream()
+                .map(RatingDto::new)
+                .toList();
     }
 
     @Override
     public void deleteById(UUID id) {
-        ratingRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Rating"));
-        ratingRepository.deleteById(id);
+        ratingRepository.delete(ratingRepository.getById(id));
     }
 }

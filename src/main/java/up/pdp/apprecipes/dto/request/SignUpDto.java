@@ -1,18 +1,15 @@
-package up.pdp.apprecipes.dto;
+package up.pdp.apprecipes.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserCRUDDto {
-    private UUID attachmentId;
-    private String name;
+public class SignUpDto {
     private String email;
+    private String name;
     private String password;
-    private String location;
+    private String acceptedPassword;
 }

@@ -2,8 +2,7 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.StepCrudDto;
-import up.pdp.apprecipes.exceptions.NotFoundException;
+import up.pdp.apprecipes.dto.StepDto;
 import up.pdp.apprecipes.model.Step;
 import up.pdp.apprecipes.repository.StepRepository;
 import up.pdp.apprecipes.service.StepService;
@@ -15,30 +14,31 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StepServiceImpl implements StepService {
     private final StepRepository stepRepository;
+
     @Override
-    public Step save(StepCrudDto dto) {
-        return Step.builder()
+    public StepDto save(StepDto dto) {
+        Step step = Step.builder()
                 .step(dto.getStep())
                 .description(dto.getDescription())
                 .build();
+        return new StepDto(stepRepository.save(step));
     }
 
     @Override
-    public StepCrudDto getById(UUID id) {
-        Step step = stepRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Step"));
-        return new StepCrudDto(step);
+    public StepDto getById(UUID id) {
+        return new StepDto(stepRepository.getById(id));
     }
 
     @Override
-    public List<Step> getAll() {
-        return stepRepository.findAll();
+    public List<StepDto> getAll() {
+        return stepRepository.findAll()
+                .stream()
+                .map(StepDto::new)
+                .toList();
     }
 
     @Override
     public void deleteById(UUID id) {
-        stepRepository.findById(id)
-                        .orElseThrow(() -> new NotFoundException("Step"));
-        stepRepository.deleteById(id);
+        stepRepository.delete(stepRepository.getById(id));
     }
 }

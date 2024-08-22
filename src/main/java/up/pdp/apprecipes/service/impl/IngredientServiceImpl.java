@@ -2,7 +2,7 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.IngredientCRUDDto;
+import up.pdp.apprecipes.dto.request.IngredientCRUDDto;
 import up.pdp.apprecipes.exceptions.NotFoundException;
 import up.pdp.apprecipes.mapper.DefaultMapper;
 import up.pdp.apprecipes.model.Ingredient;
