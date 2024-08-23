@@ -11,14 +11,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import up.pdp.apprecipes.model.User;
-import up.pdp.apprecipes.service.AuthService;
+import up.pdp.apprecipes.service.UserService;
 
 import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
-    private final AuthService authService;
+    private final UserService authService;
     private final JwtProvider jwtProvider;
 
 

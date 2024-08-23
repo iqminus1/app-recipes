@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import up.pdp.apprecipes.service.AuthService;
+import up.pdp.apprecipes.service.UserService;
 import up.pdp.apprecipes.utils.AppConst;
 
 import java.util.List;
@@ -27,9 +27,9 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
-    private final AuthService authService;
+    private final UserService authService;
 
-    public SecurityConfig(@Lazy JwtFilter jwtProvider, @Lazy AuthService authService) {
+    public SecurityConfig(@Lazy JwtFilter jwtProvider, @Lazy UserService authService) {
         this.jwtFilter = jwtProvider;
         this.authService = authService;
     }
