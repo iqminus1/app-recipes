@@ -13,9 +13,11 @@ import up.pdp.apprecipes.model.Attachment;
 import up.pdp.apprecipes.repository.AttachmentRepository;
 import up.pdp.apprecipes.service.AttachmentService;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,15 +44,25 @@ public class AttachmentServiceImpl implements AttachmentService {
     @Override
     public ApiResultDto<?> create(HttpServletRequest req) {
         try {
-            List<AttachmentDto> result = req.getParts().stream()
-                    .map(part -> createOrUpdate(new Attachment(), part, false))
-                    .toList();
-            return ApiResultDto.success(result);
-        } catch (IOException | ServletException e) {
+            String folderPath = BASE_PATH.toString();
+            File folder = new File(folderPath);
+            if (!folder.exists()) {
+                if (!folder.mkdirs()) {
+                    throw new RuntimeException("Failed to create the directory: " + folderPath);
+                }
+            }
+        } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
-    }
-
+        try {
+                List<AttachmentDto> result = req.getParts().stream()
+                        .map(part -> createOrUpdate(new Attachment(), part, false))
+                        .toList();
+                return ApiResultDto.success(result);
+            } catch (IOException | ServletException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
     @Override
     public ApiResultDto<?> update(HttpServletRequest req, UUID id) {

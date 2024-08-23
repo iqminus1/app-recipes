@@ -31,18 +31,18 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public List<Ingredient> findAll() {
         List<Ingredient> all = ingredientRepository.findAll();
-        if (all.isEmpty()) throw new NotFoundException("ingredient");
+        if (all.isEmpty()) throw new NotFoundException("ingredient not found!");
         return all;
     }
 
     @Override
     public Ingredient findById(UUID id) {
-        return ingredientRepository.findById(id).orElseThrow(() -> new NotFoundException("ingredient"));
+        return ingredientRepository.findById(id).orElseThrow(() -> new NotFoundException("ingredient not found!"));
     }
 
     @Override
     public Ingredient findByName(String name) {
-        return ingredientRepository.findByName(name).orElseThrow(() -> new NotFoundException("ingredient"));
+        return ingredientRepository.findByName(name).orElseThrow(() -> new NotFoundException("ingredient not found!"));
     }
 
     @Override

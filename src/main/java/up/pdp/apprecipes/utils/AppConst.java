@@ -1,6 +1,9 @@
 package up.pdp.apprecipes.utils;
 
+import java.io.File;
+import java.nio.file.Path;
+
 public interface AppConst {
     String API_V1 = "/api/v1";
-    String BASE_PATH = "C:\\Users\\nizom\\app-recipes";
+    Path BASE_PATH = Path.of(System.getProperty("user.home")+ "/" + "recipe-app"+ File.separator + "attachments" + File.separator);
 }

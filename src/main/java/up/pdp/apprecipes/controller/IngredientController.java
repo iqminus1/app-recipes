@@ -2,12 +2,7 @@ package up.pdp.apprecipes.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import up.pdp.apprecipes.dto.request.IngredientCRUDDto;
 import up.pdp.apprecipes.dto.response.SuccessResponse;
 import up.pdp.apprecipes.service.IngredientService;
@@ -22,7 +17,7 @@ public class IngredientController {
     private final IngredientService ingredientService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(IngredientCRUDDto ingredient) {
+    public ResponseEntity<?> save(@RequestBody IngredientCRUDDto ingredient) {
         return ResponseEntity.ok(ingredientService.save(ingredient));
     }
     @GetMapping("/all")
