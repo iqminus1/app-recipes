@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import up.pdp.apprecipes.dto.request.SignInDto;
 import up.pdp.apprecipes.dto.request.SignUpDto;
 import up.pdp.apprecipes.dto.request.UserCRUDDto;
+import up.pdp.apprecipes.dto.request.UserDeleteDto;
 import up.pdp.apprecipes.dto.response.ApiResultDto;
 import up.pdp.apprecipes.dto.response.TokenDto;
 import up.pdp.apprecipes.model.Code;
@@ -21,14 +22,14 @@ import up.pdp.apprecipes.repository.AttachmentRepository;
 import up.pdp.apprecipes.repository.CodeRepository;
 import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.security.JwtProvider;
-import up.pdp.apprecipes.service.AuthService;
+import up.pdp.apprecipes.service.UserService;
 import up.pdp.apprecipes.service.MailService;
 
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final MailService mailService;
@@ -119,6 +120,16 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
         return ApiResultDto.success("Ok");
+    }
+
+    @Override
+    public ApiResultDto<?> delete(UserDeleteDto deleteDto) {
+        User byEmail = userRepository.getByEmail(deleteDto.getEmail());
+        if (byEmail.getPassword().matches(passwordEncoder.encode(deleteDto.getPassword()))) {
+            userRepository.delete(byEmail);
+            return ApiResultDto.success("Ok");
+        }
+        return ApiResultDto.error("User could not be deleted");
     }
 
 }
