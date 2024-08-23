@@ -1,5 +1,6 @@
 package up.pdp.apprecipes.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import up.pdp.apprecipes.dto.ProductDto;
@@ -38,6 +39,13 @@ public class ProductServiceImpl implements ProductService {
 
         List<Ingredient> ingredients = ingredientRepository.findAllById(productDto.getIngredientIds());
         List<Step> steps = stepRepository.findAllById(productDto.getStepIds());
+
+        if (ingredients.size() != productDto.getIngredientIds().size()) {
+            throw new EntityNotFoundException("One or more ingredients not found");
+        }
+        if (steps.size() != productDto.getStepIds().size()) {
+            throw new EntityNotFoundException("One or more steps not found");
+        }
 
         Product product = Product.builder()
                 .name(productDto.getName())

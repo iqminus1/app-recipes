@@ -14,5 +14,4 @@ public interface AttachmentRepository extends JpaRepository<Attachment, UUID> {
     default Attachment getById(@NonNull UUID id) {
         return findById(id).orElseThrow(() -> NotFoundException.errorById("Attachment", id));
     }
-
 }

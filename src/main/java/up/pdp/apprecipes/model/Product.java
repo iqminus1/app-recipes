@@ -1,9 +1,9 @@
 package up.pdp.apprecipes.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,12 +30,12 @@ public class Product extends AbsUUIDEntity {
     private String name;
     @ManyToOne
     private Category category;
-    @OneToOne
+    @ManyToOne
     private Attachment attachment;
     private LocalTime preparationTime;
-    @OneToMany
+    @ManyToMany
     private List<Ingredient> ingredients;
-    @OneToOne
+    @ManyToOne
     private User author;
     @OneToMany
     private List<Step> steps;

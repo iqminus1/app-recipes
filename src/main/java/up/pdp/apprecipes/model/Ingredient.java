@@ -1,6 +1,8 @@
 package up.pdp.apprecipes.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,8 +11,6 @@ import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import up.pdp.apprecipes.model.templates.AbsUUIDEntity;
-
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,6 +23,6 @@ import java.util.UUID;
 @SQLDelete(sql = "update ingredient set deleted = true where id = ?")
 public class Ingredient extends AbsUUIDEntity {
     private String name;
-    @OneToOne
+    @ManyToOne
     private Attachment attachment;
 }
