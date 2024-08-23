@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResultDto<?> delete(UserDeleteDto deleteDto) {
         User byEmail = userRepository.getByEmail(deleteDto.getEmail());
-        if (byEmail.getPassword().matches(passwordEncoder.encode(deleteDto.getPassword()))) {
+        if (passwordEncoder.matches(deleteDto.getPassword(), byEmail.getPassword())) {
             userRepository.delete(byEmail);
             return ApiResultDto.success("Ok");
         }
