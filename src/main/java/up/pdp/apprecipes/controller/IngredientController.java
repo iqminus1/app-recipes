@@ -3,7 +3,7 @@ package up.pdp.apprecipes.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import up.pdp.apprecipes.dto.request.IngredientCRUDDto;
+import up.pdp.apprecipes.dto.IngredientDto;
 import up.pdp.apprecipes.dto.response.SuccessResponse;
 import up.pdp.apprecipes.service.IngredientService;
 import up.pdp.apprecipes.utils.AppConst;
@@ -17,7 +17,7 @@ public class IngredientController {
     private final IngredientService ingredientService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody IngredientCRUDDto ingredient) {
+    public ResponseEntity<?> save(@RequestBody IngredientDto ingredient) {
         return ResponseEntity.ok(ingredientService.save(ingredient));
     }
     @GetMapping("/all")
