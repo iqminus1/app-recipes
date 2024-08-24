@@ -3,6 +3,7 @@ package up.pdp.apprecipes.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import up.pdp.apprecipes.dto.IngredientDto;
+import up.pdp.apprecipes.exceptions.AlreadyExistsException;
 import up.pdp.apprecipes.exceptions.NotFoundException;
 import up.pdp.apprecipes.mapper.DefaultMapper;
 import up.pdp.apprecipes.model.Ingredient;
@@ -12,6 +13,7 @@ import up.pdp.apprecipes.service.IngredientService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,6 +25,10 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public IngredientDto save(IngredientDto ingredient) {
+        Ingredient byName = ingredientRepository.findByName(ingredient.getName()).orElse(null);
+        if (byName != null) {
+            throw new AlreadyExistsException("Ingredient");
+        }
         Ingredient ingredient1 = new Ingredient();
         defaultMapper.ingredientUpdateEntity(ingredient, ingredient1);
         ingredient1.setAttachment(attachmentRepository.getById(ingredient.getAttachmentId()));
@@ -32,23 +38,17 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public List<IngredientDto> findAll() {
-        List<IngredientDto> ingredients = new ArrayList<>();
-        defaultMapper.ingredientsEntityToDto(ingredientRepository.getAll(), ingredients);
-        return ingredients;
+        return ingredientRepository.findAll().stream().map(IngredientDto::new).toList();
     }
 
     @Override
     public IngredientDto findById(UUID id) {
-        IngredientDto ingredientDto = new IngredientDto();
-        defaultMapper.ingredientEntityToDto(ingredientRepository.getById(id),ingredientDto); ;
-        return ingredientDto;
+        return new IngredientDto(ingredientRepository.findById(id).orElseThrow(() -> new NotFoundException("Ingredient not found with this ID: ------->>>>>>" + id)));
     }
 
     @Override
     public IngredientDto findByName(String name) {
-        IngredientDto ingredientDto = new IngredientDto();
-        defaultMapper.ingredientEntityToDto(ingredientRepository.getByName(name), ingredientDto);
-        return ingredientDto;
+        return new IngredientDto(ingredientRepository.findByName(name).orElseThrow(() -> new NotFoundException("Ingredient not found")));
     }
 
     @Override

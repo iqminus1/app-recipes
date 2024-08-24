@@ -14,16 +14,4 @@ import java.util.UUID;
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, UUID> {
     Optional<Ingredient> findByName(String name);
-    @NotNull
-    default Ingredient getById(@NotNull UUID uuid){
-        return findById(uuid).orElseThrow(() -> new NotFoundException("Ingredient not found"));
-    }
-    @NotNull
-    default Ingredient getByName(@NotBlank String name){
-        return findByName(name).orElseThrow(() -> new NotFoundException("Ingredient not found"));
-    }
-    @NotNull
-    default List<Ingredient> getAll(){
-            return findAll();
-    }
 }

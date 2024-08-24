@@ -14,4 +14,8 @@ public class IngredientDto {
     private UUID attachmentId;
     private String name;
 
+    public IngredientDto(Ingredient ingredient) {
+        this.name = ingredient.getName();
+        this.attachmentId = ingredient.getAttachment().getId();
+    }
 }
