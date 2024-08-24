@@ -12,7 +12,6 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import up.pdp.apprecipes.model.templates.AbsUUIDEntity;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter

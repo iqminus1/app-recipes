@@ -86,4 +86,7 @@ public class User extends AbsUUIDEntity implements UserDetails, Serializable {
     public int hashCode() {
         return Objects.hashCode(getId());
     }
+
+    public boolean isEnabled(){
+        return enable;}
 }
