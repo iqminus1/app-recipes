@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,18 +62,6 @@ public class AttachmentServiceImpl implements AttachmentService {
                 throw new RuntimeException(e);
             }
         }
-
-    @Override
-    public ApiResultDto<?> update(HttpServletRequest req, UUID id) {
-        try {
-            Attachment attachment = attachmentRepository.getById(id);
-            List<AttachmentDto> result = req.getParts().stream()
-                    .map(part -> createOrUpdate(attachment, part, true)).toList();
-            return ApiResultDto.success(result);
-        } catch (IOException | ServletException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public void delete(UUID id) {
