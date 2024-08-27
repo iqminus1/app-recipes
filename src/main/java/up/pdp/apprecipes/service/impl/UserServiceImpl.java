@@ -16,6 +16,7 @@ import up.pdp.apprecipes.dto.request.UserCRUDDto;
 import up.pdp.apprecipes.dto.request.UserDeleteDto;
 import up.pdp.apprecipes.dto.response.ApiResultDto;
 import up.pdp.apprecipes.dto.response.TokenDto;
+import up.pdp.apprecipes.model.Attachment;
 import up.pdp.apprecipes.model.Code;
 import up.pdp.apprecipes.model.User;
 import up.pdp.apprecipes.repository.AttachmentRepository;
@@ -24,8 +25,10 @@ import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.security.JwtProvider;
 import up.pdp.apprecipes.service.UserService;
 import up.pdp.apprecipes.service.MailService;
+import up.pdp.apprecipes.utils.Validations;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -107,16 +110,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResultDto<?> update(UserCRUDDto crudDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (crudDto.getAttachmentId() != null)
-            user.setAttachment(attachmentRepository.getById(crudDto.getAttachmentId()));
-        if (crudDto.getEmail() != null)
-            user.setEmail(crudDto.getEmail());
+        if (crudDto.getAttachmentId() != null) {
+            Optional<Attachment> attachment = attachmentRepository.findById(crudDto.getAttachmentId());
+            attachment.ifPresent(user::setAttachment);
+        }
+        user.setEmail(Validations.requireNonNullElse(crudDto.getEmail(), user.getEmail()));
+        user.setName(Validations.requireNonNullElse(crudDto.getName(), user.getName()));
+        user.setLocation(Validations.requireNonNullElse(crudDto.getLocation(), user.getLocation()));
         if (crudDto.getPassword() != null)
             user.setPassword(passwordEncoder.encode(crudDto.getPassword()));
-        if (crudDto.getName() != null)
-            user.setName(crudDto.getName());
-        if (crudDto.getLocation() != null)
-            user.setLocation(crudDto.getLocation());
+
 
         userRepository.save(user);
         return ApiResultDto.success("Ok");
