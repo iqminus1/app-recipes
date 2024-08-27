@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     @Override
     public ApiResultDto<?> signUp(SignUpDto signUp) {
-        if (!Objects.equals(signUp.getPassword(), signUp.getAcceptedPassword())) {
+        if (!Objects.equals(signUp.getPassword(), signUp.getConfirmPassword())) {
             throw new BadRequestException();
         }
         User user = new User(
