@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 80
 
 spring:
   data:
@@ -28,16 +28,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
-
-  sql:
-    init:
-      mode: never
-
-  batch:
-    jdbc:
-      initialize-schema: always
-
+      ddl-auto: create-drop
 app:
   token:
     expireDays: 3

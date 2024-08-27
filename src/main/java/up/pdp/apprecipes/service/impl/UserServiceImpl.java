@@ -24,7 +24,7 @@ import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.security.JwtProvider;
 import up.pdp.apprecipes.service.UserService;
 import up.pdp.apprecipes.service.MailService;
-
+import up.pdp.apprecipes.exceptions.AlreadyExistsException;
 import java.util.Objects;
 
 @Service
@@ -65,6 +65,9 @@ public class UserServiceImpl implements UserService {
         if (!Objects.equals(signUp.getPassword(), signUp.getAcceptedPassword())) {
             throw new BadRequestException();
         }
+	if(userRepository.findByEmail(signUp.getEmail()).isPresent()){
+ 	throw new AlreadyExistsException("User");
+}
         User user = new User(
                 signUp.getEmail(),
                 passwordEncoder.encode(signUp.getPassword()),
