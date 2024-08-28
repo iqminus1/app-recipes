@@ -17,8 +17,8 @@ import java.util.UUID;
 public abstract class AbsAuditEntity extends AbsDateEntity implements Serializable {
     @CreatedBy
     @Column(updatable = false)
-    private UUID createBy;
+    private UUID created_By;
 
     @LastModifiedBy
-    private UUID updateBy;
+    private UUID updated_By;
 }

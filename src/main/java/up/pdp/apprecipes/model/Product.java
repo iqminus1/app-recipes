@@ -39,4 +39,7 @@ public class Product extends AbsUUIDEntity {
     private User author;
     @OneToMany
     private List<Step> steps;
+    @OneToMany
+    private List<Rating> ratings;
+    private Double overallRating;
 }
