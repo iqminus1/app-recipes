@@ -25,19 +25,30 @@ public class RatingServiceImpl implements RatingService {
     public RatingDto save(RatingDto ratingDto) {
         User rater = userRepository.getById(ratingDto.getRaterId());
         Product product = productRepository.getById(ratingDto.getProductId());
-
+        Double overallRating = product.getOverallRating();
+        int counter = 0;
+        for (Rating rating : product.getRatings()){
+            counter++;
+            overallRating += rating.getRating();
+        }
+        product.setOverallRating(overallRating / counter);
+        productRepository.save(product);
         Rating rating = Rating.builder()
                 .rater(rater)
                 .product(product)
                 .rating(ratingDto.getRating())
                 .build();
-
         return new RatingDto(ratingRepository.save(rating));
     }
 
     @Override
     public RatingDto getById(UUID id) {
         return new RatingDto(ratingRepository.getById(id));
+    }
+
+    @Override
+    public List<Rating> getByRating(Double rating) {
+        return ratingRepository.findAllByRating(rating);
     }
 
     @Override
