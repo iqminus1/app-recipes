@@ -25,11 +25,6 @@ public class AttachmentController {
     public ResponseEntity<?> create(HttpServletRequest req) {
         return ResponseEntity.status(200).body(attachmentService.create(req));
     }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(HttpServletRequest req, @PathVariable UUID id) {
-        return ResponseEntity.status(200).body(attachmentService.update(req, id));
-    }
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable UUID id) {
         attachmentService.delete(id);
