@@ -12,7 +12,5 @@ import java.util.UUID;
 public class UserCRUDDto {
     private UUID attachmentId;
     private String name;
-    private String email;
     private String password;
-    private String location;
 }

@@ -118,12 +118,9 @@ public class UserServiceImpl implements UserService {
             Optional<Attachment> attachment = attachmentRepository.findById(crudDto.getAttachmentId());
             attachment.ifPresent(user::setAttachment);
         }
-        user.setEmail(Validations.requireNonNullElse(crudDto.getEmail(), user.getEmail()));
         user.setName(Validations.requireNonNullElse(crudDto.getName(), user.getName()));
-        user.setLocation(Validations.requireNonNullElse(crudDto.getLocation(), user.getLocation()));
         if (crudDto.getPassword() != null)
             user.setPassword(passwordEncoder.encode(crudDto.getPassword()));
-
 
         userRepository.save(user);
         return ApiResultDto.success("Ok");
