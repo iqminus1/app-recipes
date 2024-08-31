@@ -31,7 +31,6 @@ import java.util.Objects;
 @SQLRestriction("deleted = false")
 @SQLDelete(sql = "update users set deleted = true where id = ?")
 public class User extends AbsUUIDEntity implements UserDetails, Serializable {
-
     @Column(unique = true)
     private String email;
 

@@ -1,10 +1,16 @@
 package up.pdp.apprecipes.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import up.pdp.apprecipes.dto.ProductDto;
-import up.pdp.apprecipes.model.*;
+import up.pdp.apprecipes.exceptions.NotFoundException;
+import up.pdp.apprecipes.model.Attachment;
+import up.pdp.apprecipes.model.Category;
+import up.pdp.apprecipes.model.Ingredient;
+import up.pdp.apprecipes.model.Product;
+import up.pdp.apprecipes.model.Step;
+import up.pdp.apprecipes.model.User;
 import up.pdp.apprecipes.repository.AttachmentRepository;
 import up.pdp.apprecipes.repository.CategoryRepository;
 import up.pdp.apprecipes.repository.IngredientRepository;
@@ -12,7 +18,6 @@ import up.pdp.apprecipes.repository.ProductRepository;
 import up.pdp.apprecipes.repository.StepRepository;
 import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.service.ProductService;
-import up.pdp.apprecipes.service.RatingService;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
+    @Transactional
     public ProductDto save(ProductDto productDto) {
         Category category = categoryRepository.getById(productDto.getCategoryId());
         Attachment attachment = attachmentRepository.getById(productDto.getAttachmentId());
@@ -37,10 +43,10 @@ public class ProductServiceImpl implements ProductService {
         List<Step> steps = stepRepository.findAllById(productDto.getStepIds());
 
         if (ingredients.size() != productDto.getIngredientIds().size()) {
-            throw new EntityNotFoundException("One or more ingredients not found");
+            throw new NotFoundException("One or more ingredients not found");
         }
         if (steps.size() != productDto.getStepIds().size()) {
-            throw new EntityNotFoundException("One or more steps not found");
+            throw new NotFoundException("One or more steps not found");
         }
 
         Product product = Product.builder()
