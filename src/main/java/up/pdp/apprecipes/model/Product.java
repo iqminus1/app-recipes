@@ -42,4 +42,6 @@ public class Product extends AbsUUIDEntity {
     @OneToMany
     private List<Rating> ratings;
     private Double overallRating;
+    @OneToMany
+    private List<Review> review;
 }

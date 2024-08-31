@@ -7,6 +7,7 @@ import lombok.Getter;
 import up.pdp.apprecipes.model.Ingredient;
 import up.pdp.apprecipes.model.Product;
 import up.pdp.apprecipes.model.Step;
+import up.pdp.apprecipes.model.templates.AbsUUIDEntity;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -24,6 +25,7 @@ public class ProductDto {
     private List<UUID> ingredientIds;
     private UUID authorId;
     private List<UUID> stepIds;
+    private List<UUID> reviewIds;
 
     public ProductDto(Product product) {
         this.name = product.getName();
@@ -39,5 +41,6 @@ public class ProductDto {
                 .stream()
                 .map(Step::getId)
                 .toList();
+        this.reviewIds = product.getReview() != null ? product.getReview().stream().map(AbsUUIDEntity::getId).toList() : null;
     }
 }

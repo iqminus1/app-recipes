@@ -5,8 +5,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import up.pdp.apprecipes.dto.CategoryDto;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import up.pdp.apprecipes.dto.ProductDto;
 import up.pdp.apprecipes.dto.response.SuccessResponse;
 import up.pdp.apprecipes.model.Category;
@@ -15,7 +21,6 @@ import up.pdp.apprecipes.model.Rating;
 import up.pdp.apprecipes.model.enums.TimeFilter;
 import up.pdp.apprecipes.repository.CategoryRepository;
 import up.pdp.apprecipes.repository.ProductRepository;
-import up.pdp.apprecipes.service.CategoryService;
 import up.pdp.apprecipes.service.ProductService;
 import up.pdp.apprecipes.service.RatingService;
 import up.pdp.apprecipes.specification.ProductSpecification;
@@ -34,7 +39,7 @@ public class ProductController {
     private final CategoryRepository categoryRepository;
     private final RatingService ratingService;
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<?> save(@RequestBody ProductDto productDto) {
         return ResponseEntity.ok(productService.save(productDto));
     }
