@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import up.pdp.apprecipes.dto.CategoryDto;
+import up.pdp.apprecipes.dto.request.CategoryCRUDDto;
 import up.pdp.apprecipes.dto.response.SuccessResponse;
 import up.pdp.apprecipes.service.CategoryService;
 import up.pdp.apprecipes.utils.AppConst;
@@ -23,8 +23,8 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody CategoryDto categoryDto) {
-        return ResponseEntity.ok(categoryService.save(categoryDto));
+    public ResponseEntity<?> save(@RequestBody CategoryCRUDDto categoryCRUDDto) {
+        return ResponseEntity.ok(categoryService.save(categoryCRUDDto));
     }
 
     @GetMapping("/id/{id}")

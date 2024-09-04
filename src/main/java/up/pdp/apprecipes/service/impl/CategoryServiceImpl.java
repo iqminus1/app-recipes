@@ -2,7 +2,8 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.CategoryDto;
+import up.pdp.apprecipes.dto.request.CategoryCRUDDto;
+import up.pdp.apprecipes.dto.response.CategoryDto;
 import up.pdp.apprecipes.exceptions.AlreadyExistsException;
 import up.pdp.apprecipes.exceptions.NotFoundException;
 import up.pdp.apprecipes.model.Category;
@@ -19,13 +20,13 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public CategoryDto save(CategoryDto categoryDto) {
-        if (categoryRepository.findByName(categoryDto.getName()).isPresent())
-            throw new AlreadyExistsException("Category with name " + categoryDto.getName());
+    public CategoryDto save(CategoryCRUDDto categoryCRUDDto) {
+        if (categoryRepository.findByName(categoryCRUDDto.getName()).isPresent())
+            throw new AlreadyExistsException("Category with name " + categoryCRUDDto.getName());
 
         Category category = Category.builder()
-                .name(categoryDto.getName())
-                .description(categoryDto.getDescription())
+                .name(categoryCRUDDto.getName())
+                .description(categoryCRUDDto.getDescription())
                 .build();
 
         return new CategoryDto(categoryRepository.save(category));
