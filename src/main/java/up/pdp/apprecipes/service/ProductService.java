@@ -12,4 +12,5 @@ public interface ProductService {
     List<ProductDto> getAllByAuthorId(UUID id);
     List<ProductDto> getAllByCategoryId(UUID id);
     void delete(UUID id);
+    List<ProductDto> getTopProductsByRating(Float rating);
 }

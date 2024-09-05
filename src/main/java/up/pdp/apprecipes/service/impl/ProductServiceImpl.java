@@ -19,6 +19,7 @@ import up.pdp.apprecipes.repository.StepRepository;
 import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.service.ProductService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -96,5 +97,23 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void delete(UUID id) {
         productRepository.delete(productRepository.getById(id));
+    }
+
+    @Override
+    public List<ProductDto> getTopProductsByRating(Float rating) {
+        List<ProductDto> highRating = new ArrayList<>();
+        List<ProductDto> lowRating = new ArrayList<>();
+
+        List<ProductDto> all = getAll();
+        for (ProductDto productDto : all){
+            if (productDto.getOverallRating() >= 4.1)
+                highRating.add(productDto);
+            else if (productDto.getOverallRating() >= 3D) {
+                lowRating.add(productDto);
+            }
+        }
+        if (highRating.isEmpty())
+            return lowRating;
+        else return highRating;
     }
 }

@@ -28,6 +28,7 @@ public class ProductDto {
     private List<UUID> stepIds;
     private List<Rating> ratings;
     private List<UUID> reviewIds;
+    private Double overallRating;
 
     public ProductDto(Product product) {
         this.name = product.getName();
@@ -44,5 +45,6 @@ public class ProductDto {
                 .map(Step::getId)
                 .toList();
         this.reviewIds = product.getReview() != null ? product.getReview().stream().map(AbsUUIDEntity::getId).toList() : null;
+        this.overallRating = product.getOverallRating();
     }
 }
