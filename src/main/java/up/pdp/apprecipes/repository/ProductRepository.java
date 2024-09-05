@@ -18,4 +18,5 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     }
 
     List<Product> findAllByAuthorId(UUID id);
+    List<Product> findAllByCategoryId(UUID id);
 }

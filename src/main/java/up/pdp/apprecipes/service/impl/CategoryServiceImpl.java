@@ -2,6 +2,7 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import up.pdp.apprecipes.dto.ProductDto;
 import up.pdp.apprecipes.dto.request.CategoryCRUDDto;
 import up.pdp.apprecipes.dto.response.CategoryDto;
 import up.pdp.apprecipes.exceptions.AlreadyExistsException;
@@ -9,6 +10,7 @@ import up.pdp.apprecipes.exceptions.NotFoundException;
 import up.pdp.apprecipes.model.Category;
 import up.pdp.apprecipes.repository.CategoryRepository;
 import up.pdp.apprecipes.service.CategoryService;
+import up.pdp.apprecipes.service.ProductService;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductService productService;
 
     @Override
     public CategoryDto save(CategoryCRUDDto categoryCRUDDto) {
@@ -34,13 +37,30 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getById(UUID id) {
-        return new CategoryDto(categoryRepository.getById(id));
+        List<ProductDto> allProductsByCategoryId = productService.getAllByCategoryId(id);
+        Category category = categoryRepository.getById(id);
+
+        return CategoryDto.builder()
+                .id(id)
+                .name(category.getName())
+                .description(category.getDescription())
+                .products(allProductsByCategoryId)
+                .build();
     }
 
     @Override
     public CategoryDto getByName(String name) {
-        return new CategoryDto(categoryRepository.findByName(name)
-                .orElseThrow(() -> new NotFoundException("Category with name " + name + " not found")));
+        Category category = categoryRepository.findByName(name)
+                .orElseThrow(() -> new NotFoundException("Category with name " + name + " not found"));
+
+        List<ProductDto> allProductsByCategoryId = productService.getAllByCategoryId(category.getId());
+
+        return CategoryDto.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .description(category.getDescription())
+                .products(allProductsByCategoryId)
+                .build();
     }
 
     @Override

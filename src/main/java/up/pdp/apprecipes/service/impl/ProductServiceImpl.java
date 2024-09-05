@@ -86,6 +86,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<ProductDto> getAllByCategoryId(UUID id) {
+        return productRepository.findAllByCategoryId(id)
+                .stream()
+                .map(ProductDto::new)
+                .toList();
+    }
+
+    @Override
     public void delete(UUID id) {
         productRepository.delete(productRepository.getById(id));
     }
