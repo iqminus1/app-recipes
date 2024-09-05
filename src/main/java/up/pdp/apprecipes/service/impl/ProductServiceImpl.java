@@ -37,7 +37,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductDto save(ProductCRUDDto productDto) {
-        Category category = categoryRepository.getById(productDto.getCategoryId());
+        Category category = categoryRepository.findByName(productDto.getCategoryName())
+                .orElseThrow(() -> NotFoundException.error("Category"));
+
         Attachment attachment = attachmentRepository.getById(productDto.getAttachmentId());
         User author = userRepository.getById(productDto.getAuthorId());
 
