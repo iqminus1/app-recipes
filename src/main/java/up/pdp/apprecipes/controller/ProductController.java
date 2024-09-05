@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import up.pdp.apprecipes.dto.ProductDto;
+import up.pdp.apprecipes.dto.request.ProductCRUDDto;
 import up.pdp.apprecipes.dto.response.SuccessResponse;
 import up.pdp.apprecipes.model.Category;
 import up.pdp.apprecipes.model.Product;
@@ -40,7 +40,7 @@ public class ProductController {
     private final RatingService ratingService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody ProductDto productDto) {
+    public ResponseEntity<?> save(@RequestBody ProductCRUDDto productDto) {
         return ResponseEntity.ok(productService.save(productDto));
     }
 

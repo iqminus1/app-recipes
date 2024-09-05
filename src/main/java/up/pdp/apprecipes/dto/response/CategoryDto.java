@@ -3,7 +3,6 @@ package up.pdp.apprecipes.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import up.pdp.apprecipes.dto.ProductDto;
 import up.pdp.apprecipes.model.Category;
 
 import java.util.ArrayList;

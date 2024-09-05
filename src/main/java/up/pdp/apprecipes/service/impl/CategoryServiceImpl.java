@@ -2,7 +2,7 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.ProductDto;
+import up.pdp.apprecipes.dto.response.ProductDto;
 import up.pdp.apprecipes.dto.request.CategoryCRUDDto;
 import up.pdp.apprecipes.dto.response.CategoryDto;
 import up.pdp.apprecipes.exceptions.AlreadyExistsException;

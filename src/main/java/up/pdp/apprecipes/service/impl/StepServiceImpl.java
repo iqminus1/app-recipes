@@ -2,7 +2,8 @@ package up.pdp.apprecipes.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.StepDto;
+import up.pdp.apprecipes.dto.request.StepCRUDDto;
+import up.pdp.apprecipes.dto.response.StepDto;
 import up.pdp.apprecipes.model.Step;
 import up.pdp.apprecipes.repository.StepRepository;
 import up.pdp.apprecipes.service.StepService;
@@ -16,11 +17,12 @@ public class StepServiceImpl implements StepService {
     private final StepRepository stepRepository;
 
     @Override
-    public StepDto save(StepDto dto) {
+    public StepDto save(StepCRUDDto dto) {
         Step step = Step.builder()
                 .step(dto.getStep())
                 .description(dto.getDescription())
                 .build();
+
         return new StepDto(stepRepository.save(step));
     }
 

@@ -3,7 +3,8 @@ package up.pdp.apprecipes.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.ProductDto;
+import up.pdp.apprecipes.dto.request.ProductCRUDDto;
+import up.pdp.apprecipes.dto.response.ProductDto;
 import up.pdp.apprecipes.exceptions.NotFoundException;
 import up.pdp.apprecipes.model.Attachment;
 import up.pdp.apprecipes.model.Category;
@@ -35,7 +36,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductDto save(ProductDto productDto) {
+    public ProductDto save(ProductCRUDDto productDto) {
         Category category = categoryRepository.getById(productDto.getCategoryId());
         Attachment attachment = attachmentRepository.getById(productDto.getAttachmentId());
         User author = userRepository.getById(productDto.getAuthorId());

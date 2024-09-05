@@ -1,21 +1,21 @@
-package up.pdp.apprecipes.dto;
+package up.pdp.apprecipes.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import up.pdp.apprecipes.model.Ingredient;
 
 import java.util.UUID;
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 public class IngredientDto {
+    private UUID id;
     private UUID attachmentId;
     private String name;
 
     public IngredientDto(Ingredient ingredient) {
-        this.name = ingredient.getName();
+        this.id = ingredient.getId();
         this.attachmentId = ingredient.getAttachment().getId();
+        this.name = ingredient.getName();
     }
 }

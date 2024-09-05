@@ -1,4 +1,4 @@
-package up.pdp.apprecipes.dto;
+package up.pdp.apprecipes.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 public class ProductDto {
+    private UUID id;
     private String name;
     private UUID categoryId;
     private UUID attachmentId;
@@ -31,6 +32,7 @@ public class ProductDto {
     private Double overallRating;
 
     public ProductDto(Product product) {
+        this.id = product.getId();
         this.name = product.getName();
         this.categoryId = product.getCategory().getId();
         this.attachmentId = product.getAttachment().getId();

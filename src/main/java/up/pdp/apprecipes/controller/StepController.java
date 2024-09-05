@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import up.pdp.apprecipes.dto.StepDto;
+import up.pdp.apprecipes.dto.request.StepCRUDDto;
 import up.pdp.apprecipes.dto.response.SuccessResponse;
 import up.pdp.apprecipes.service.StepService;
 import up.pdp.apprecipes.utils.AppConst;
@@ -23,8 +23,8 @@ public class StepController {
     private final StepService stepService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody StepDto step) {
-        return ResponseEntity.ok(stepService.save(step));
+    public ResponseEntity<?> save(@RequestBody StepCRUDDto stepDto) {
+        return ResponseEntity.ok(stepService.save(stepDto));
     }
 
     @GetMapping("/id/{id}")
