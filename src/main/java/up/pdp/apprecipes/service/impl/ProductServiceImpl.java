@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getTopProductsByRating(Float rating) {
+    public List<ProductDto> getTopProductsByRating() {
         List<ProductDto> highRating = new ArrayList<>();
         List<ProductDto> lowRating = new ArrayList<>();
 

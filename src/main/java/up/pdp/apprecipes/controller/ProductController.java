@@ -58,7 +58,10 @@ public class ProductController {
     public ResponseEntity<?> findAllByAuthorId(@PathVariable UUID authorId) {
         return ResponseEntity.ok(productService.getAllByAuthorId(authorId));
     }
-
+    @GetMapping("/product-by-rating")
+    public ResponseEntity<?> findProductByRating() {
+        return ResponseEntity.ok(productService.getTopProductsByRating());
+    }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable UUID id) {
         productService.delete(id);
