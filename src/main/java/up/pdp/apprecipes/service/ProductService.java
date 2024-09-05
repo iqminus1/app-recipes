@@ -10,5 +10,6 @@ public interface ProductService {
     ProductDto getById(UUID id);
     List<ProductDto> getAll();
     List<ProductDto> getAllByAuthorId(UUID id);
+    List<ProductDto> getAllByCategoryId(UUID id);
     void delete(UUID id);
 }

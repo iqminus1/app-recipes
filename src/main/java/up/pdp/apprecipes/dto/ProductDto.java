@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import up.pdp.apprecipes.model.Ingredient;
 import up.pdp.apprecipes.model.Product;
+import up.pdp.apprecipes.model.Rating;
 import up.pdp.apprecipes.model.Step;
 import up.pdp.apprecipes.model.templates.AbsUUIDEntity;
 
@@ -25,6 +26,7 @@ public class ProductDto {
     private List<UUID> ingredientIds;
     private UUID authorId;
     private List<UUID> stepIds;
+    private List<Rating> ratings;
     private List<UUID> reviewIds;
 
     public ProductDto(Product product) {
