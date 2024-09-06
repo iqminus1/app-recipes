@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
                 false,
                 false
         );
-        userRepository.save(user);
+        MailServiceImpl.TEMP_USERS.put(user.getEmail(),user);
         mailService.sendVerify(signUp.getEmail());
         return ApiResultDto.success("Verify email");
     }
