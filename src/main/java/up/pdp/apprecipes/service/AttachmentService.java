@@ -1,13 +1,13 @@
 package up.pdp.apprecipes.service;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import up.pdp.apprecipes.dto.response.ApiResultDto;
+import org.springframework.web.multipart.MultipartFile;
+import up.pdp.apprecipes.dto.response.AttachmentDto;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public interface AttachmentService {
-    void read(HttpServletResponse resp, UUID id);
-    ApiResultDto<?> create(HttpServletRequest req);
-    void delete(UUID id);
+    AttachmentDto upload(MultipartFile request) throws IOException;
+    AttachmentDto getById(UUID id);
+    void deleteFile(UUID id) throws IOException;
 }

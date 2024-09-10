@@ -1,115 +1,76 @@
 package up.pdp.apprecipes.service.impl;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import up.pdp.apprecipes.dto.response.ApiResultDto;
+import org.springframework.web.multipart.MultipartFile;
 import up.pdp.apprecipes.dto.response.AttachmentDto;
-import up.pdp.apprecipes.mapper.DefaultMapper;
+import up.pdp.apprecipes.exceptions.NotFoundException;
 import up.pdp.apprecipes.model.Attachment;
 import up.pdp.apprecipes.repository.AttachmentRepository;
 import up.pdp.apprecipes.service.AttachmentService;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import static up.pdp.apprecipes.utils.AppConst.BASE_PATH;
 
-
 @Service
 @RequiredArgsConstructor
 public class AttachmentServiceImpl implements AttachmentService {
-    private final AttachmentRepository attachmentRepository;
-    private final DefaultMapper defaultMapper;
+    private final AttachmentRepository attachmentRepo;
 
     @Override
-    public void read(HttpServletResponse resp, UUID id) {
-        Attachment attachment = attachmentRepository.getById(id);
-        try {
-            Path path = Path.of(attachment.getPath());
-            Files.copy(path, resp.getOutputStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public AttachmentDto upload(MultipartFile request) throws IOException {
+        String originalFileName = request.getOriginalFilename();
+
+        String fileName = UUID.randomUUID() + getExtension(request.getContentType());
+        Path path = BASE_PATH.resolve(fileName);
+
+        Attachment attachment = Attachment.builder()
+                .originalName(originalFileName)
+                .name(fileName)
+                .type(request.getContentType())
+                .size(request.getSize())
+                .path(path.toString())
+                .build();
+
+        Files.createDirectories(BASE_PATH);
+
+        try (var inputStream = request.getInputStream()) {
+            Files.copy(inputStream, path, StandardCopyOption.REPLACE_EXISTING);
         }
+
+        Attachment savedAttachment = attachmentRepo.save(attachment);
+
+        return new AttachmentDto(savedAttachment);
+    }
+
+
+    @Override
+    public AttachmentDto getById(UUID id) {
+        Attachment attachment = attachmentRepo.findById(id)
+                .orElseThrow(() -> NotFoundException.errorById("Attachment", id));
+        return new AttachmentDto(attachment);
     }
 
     @Override
-    public ApiResultDto<?> create(HttpServletRequest req) {
-        try {
-            String folderPath = BASE_PATH.toString();
-            File folder = new File(folderPath);
-            if (!folder.exists()) {
-                if (!folder.mkdirs()) {
-                    throw new RuntimeException("Failed to create the directory: " + folderPath);
-                }
-            }
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-                List<AttachmentDto> result = req.getParts().stream()
-                        .map(part -> createOrUpdate(new Attachment(), part, false))
-                        .toList();
-                return ApiResultDto.success(result);
-            } catch (IOException | ServletException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    public void deleteFile(UUID id) throws IOException {
+        Attachment attachment = attachmentRepo.findById(id)
+                .orElseThrow(() -> NotFoundException.errorById("Attachment", id));
+        Path path = BASE_PATH.resolve(attachment.getName());
 
-    @Override
-    public void delete(UUID id) {
-        Attachment attachment = attachmentRepository.getById(id);
-        attachmentRepository.delete(attachment);
+        Files.deleteIfExists(path);
+
+        attachmentRepo.deleteById(id);
     }
 
-    private AttachmentDto createOrUpdate(Attachment attachment, Part part, boolean isUpdate) {
-        if (isUpdate) {
-            Attachment copyAttachment = new Attachment(
-                    attachment.getName(),
-                    attachment.getOriginalName(),
-                    attachment.getPath(),
-                    attachment.getContentType(),
-                    attachment.getSize()
-            );
-            copyAttachment.setDeleted(true);
-            attachmentRepository.save(copyAttachment);
-
+    private String getExtension(String contentType) {
+        if (contentType != null) {
+            return "." + contentType.substring(contentType.indexOf("/") + 1);
         }
-        try {
-
-            String contentType = part.getContentType();
-            String originalName = part.getSubmittedFileName();
-            long size = part.getSize();
-
-            String[] split = originalName.split("\\.");
-            String s = split[split.length - 1];
-            UUID uuid = UUID.randomUUID();
-
-            String name = uuid + "." + s;
-
-            String pathString = BASE_PATH + "/" + name;
-
-            Files.copy(part.getInputStream(), Path.of(pathString));
-
-            attachment.setName(name);
-            attachment.setSize(size);
-            attachment.setPath(pathString);
-            attachment.setContentType(contentType);
-            attachment.setOriginalName(originalName);
-
-            attachmentRepository.save(attachment);
-
-            return defaultMapper.toDTO(attachment);
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
+        return ".jpg";
     }
 }
-
