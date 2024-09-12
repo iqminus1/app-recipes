@@ -8,6 +8,7 @@ import up.pdp.apprecipes.dto.RatingDto;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -19,10 +20,10 @@ public class ProductCRUDDto {
     @Schema(type = "string", format = "time", example = "13:45:00", description = "Time in HH:mm:ss format")
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime preparationTime;
-    private List<UUID> ingredientIds;
+    private Map<UUID, Long> ingredients;
     private UUID authorId;
     private List<UUID> stepIds;
-    private List<RatingDto> ratings;
+    private List<UUID> ratings;
     private List<UUID> reviewIds;
     private Double overallRating;
 }

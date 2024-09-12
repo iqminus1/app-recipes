@@ -6,22 +6,13 @@ import org.springframework.stereotype.Service;
 import up.pdp.apprecipes.dto.request.ProductCRUDDto;
 import up.pdp.apprecipes.dto.response.ProductDto;
 import up.pdp.apprecipes.exceptions.NotFoundException;
-import up.pdp.apprecipes.model.Attachment;
-import up.pdp.apprecipes.model.Category;
-import up.pdp.apprecipes.model.Ingredient;
-import up.pdp.apprecipes.model.Product;
-import up.pdp.apprecipes.model.Step;
-import up.pdp.apprecipes.model.User;
-import up.pdp.apprecipes.repository.AttachmentRepository;
-import up.pdp.apprecipes.repository.CategoryRepository;
-import up.pdp.apprecipes.repository.IngredientRepository;
-import up.pdp.apprecipes.repository.ProductRepository;
-import up.pdp.apprecipes.repository.StepRepository;
-import up.pdp.apprecipes.repository.UserRepository;
+import up.pdp.apprecipes.model.*;
+import up.pdp.apprecipes.repository.*;
 import up.pdp.apprecipes.service.ProductService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -33,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
     private final UserRepository userRepository;
     private final StepRepository stepRepository;
     private final ProductRepository productRepository;
+    private final ProductIngredientRepository productIngredientRepository;
 
     @Override
     @Transactional
@@ -43,12 +35,15 @@ public class ProductServiceImpl implements ProductService {
         Attachment attachment = attachmentRepository.getById(productDto.getAttachmentId());
         User author = userRepository.getById(productDto.getAuthorId());
 
-        List<Ingredient> ingredients = ingredientRepository.findAllById(productDto.getIngredientIds());
-        List<Step> steps = stepRepository.findAllById(productDto.getStepIds());
+        // Get ingredients and validate
+        Map<UUID, Long> ingredientMap = productDto.getIngredients();
+        List<Ingredient> ingredients = ingredientRepository.findAllById(ingredientMap.keySet());
 
-        if (ingredients.size() != productDto.getIngredientIds().size()) {
+        if (ingredients.size() != ingredientMap.size()) {
             throw new NotFoundException("One or more ingredients not found");
         }
+
+        List<Step> steps = stepRepository.findAllById(productDto.getStepIds());
         if (steps.size() != productDto.getStepIds().size()) {
             throw new NotFoundException("One or more steps not found");
         }
@@ -58,14 +53,25 @@ public class ProductServiceImpl implements ProductService {
                 .category(category)
                 .attachment(attachment)
                 .preparationTime(productDto.getPreparationTime())
-                .ingredients(ingredients)
                 .author(author)
                 .steps(steps)
                 .overallRating(0D)
                 .build();
 
-        return new ProductDto(productRepository.save(product));
+        productRepository.save(product);
+
+        // Save ProductIngredient entities
+        for (Ingredient ingredient : ingredients) {
+            ProductIngredient productIngredient = new ProductIngredient();
+            productIngredient.setProduct(product);
+            productIngredient.setIngredient(ingredient);
+            productIngredient.setQuantity(ingredientMap.get(ingredient.getId()));
+            productIngredientRepository.save(productIngredient);
+        }
+
+        return new ProductDto(product);
     }
+
 
     @Override
     public ProductDto getById(UUID id) {

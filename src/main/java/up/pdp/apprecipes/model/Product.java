@@ -16,6 +16,7 @@ import up.pdp.apprecipes.model.templates.AbsUUIDEntity;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,8 +34,8 @@ public class Product extends AbsUUIDEntity {
     @ManyToOne
     private Attachment attachment;
     private LocalTime preparationTime;
-    @ManyToMany
-    private List<Ingredient> ingredients;
+    @OneToMany
+    private List<ProductIngredient> ingredients;
     @ManyToOne
     private User author;
     @OneToMany
