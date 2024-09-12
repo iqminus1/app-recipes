@@ -6,7 +6,10 @@ import up.pdp.apprecipes.dto.request.IngredientCRUDDto;
 import up.pdp.apprecipes.dto.response.IngredientDto;
 import up.pdp.apprecipes.exceptions.AlreadyExistsException;
 import up.pdp.apprecipes.exceptions.NotFoundException;
+import up.pdp.apprecipes.model.Attachment;
 import up.pdp.apprecipes.model.Ingredient;
+import up.pdp.apprecipes.repository.AttachmentRepository;
+import up.pdp.apprecipes.repository.CategoryRepository;
 import up.pdp.apprecipes.repository.IngredientRepository;
 import up.pdp.apprecipes.service.IngredientService;
 
@@ -17,13 +20,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class IngredientServiceImpl implements IngredientService {
     private final IngredientRepository ingredientRepository;
+    private final AttachmentRepository attachmentRepository;
 
     @Override
     public IngredientDto save(IngredientCRUDDto ingredientCRUDDto) {
-        Ingredient ingredient = ingredientRepository.findByName(ingredientCRUDDto.getName())
-                .orElseThrow(() -> new AlreadyExistsException("Ingredient"));
-
-        return new IngredientDto(ingredient);
+        if (ingredientRepository.findByName(ingredientCRUDDto.getName()).isPresent()){
+            throw new AlreadyExistsException(ingredientCRUDDto.getName());
+        }
+        Attachment attachment = attachmentRepository.getById(ingredientCRUDDto.getAttachmentId());
+        return new IngredientDto(ingredientRepository.save(new Ingredient(ingredientCRUDDto.getName(), attachment)));
     }
 
     @Override
