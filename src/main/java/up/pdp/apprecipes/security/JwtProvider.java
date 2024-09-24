@@ -4,46 +4,44 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import up.pdp.apprecipes.model.User;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
 import java.util.Date;
 
 @Component
 public class JwtProvider {
-
-    @Value("${app.token.expireDays}")
-    private Integer expireDays;
-
-    @Value("${app.token.secretKey}")
-    private String secretKeyString;
-
-    @Cacheable(value = "tokenGenerate", key = "#username")
-    public String generateToken(String email) {
-        Date expire = new Date(System.currentTimeMillis() + expireDays * 24 * 60 * 60 * 1000);
+    @Value("${jwt.token.secret.key}")
+    private String key;
+    @Value("${jwt.token.secret.expiry}")
+    private String expiry;
+    public String generateToken(User user){
         return Jwts.builder()
-                .subject(email)
-                .expiration(expire)
+                .subject(user.getId().toString())
                 .issuedAt(new Date())
-                .signWith(getKey())
+                .expiration(new Date(System.currentTimeMillis() + Long.parseLong(expiry)))
+                .signWith(key())
                 .compact();
     }
-
-    @Cacheable(value = "tokenSubject", key = "#token")
-    public String getSubject(String token) {
-        return ((Claims) Jwts.parser()
-                .verifyWith(getKey())
+    public boolean isValid(String token) {
+        Claims claims = parseAllClaims(token);
+        Date date = extractExpiryDate(claims);
+        return date.after(new Date());
+    }
+    public Claims parseAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(key())
                 .build()
-                .parse(token)
-                .getPayload()
-        ).getSubject();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
+    private Date extractExpiryDate(Claims claims) {
+        return claims.getExpiration();
+    }
 
-    private SecretKey getKey() {
-        byte[] decode = Base64.getDecoder().decode(secretKeyString);
-        return Keys.hmacShaKeyFor(decode);
+    public SecretKey key() {
+        return Keys.hmacShaKeyFor(key.getBytes());
     }
 }

@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class VerifyEmailDto {
     private String email;
-    private String code;
+    private Integer code;
 }

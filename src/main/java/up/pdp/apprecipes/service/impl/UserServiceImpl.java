@@ -3,116 +3,91 @@ package up.pdp.apprecipes.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.coyote.BadRequestException;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import up.pdp.apprecipes.dto.request.SignInDto;
 import up.pdp.apprecipes.dto.request.SignUpDto;
 import up.pdp.apprecipes.dto.request.UserCRUDDto;
 import up.pdp.apprecipes.dto.request.UserDeleteDto;
-import up.pdp.apprecipes.dto.response.ApiResultDto;
-import up.pdp.apprecipes.dto.response.TokenDto;
+import up.pdp.apprecipes.dto.response.JwtTokenDto;
+import up.pdp.apprecipes.dto.response.SuccessResponse;
+import up.pdp.apprecipes.dto.response.UserDto;
+import up.pdp.apprecipes.exceptions.InvalidDataException;
+import up.pdp.apprecipes.exceptions.NotFoundException;
 import up.pdp.apprecipes.model.Attachment;
-import up.pdp.apprecipes.model.Code;
 import up.pdp.apprecipes.model.User;
 import up.pdp.apprecipes.repository.AttachmentRepository;
-import up.pdp.apprecipes.repository.CodeRepository;
 import up.pdp.apprecipes.repository.UserRepository;
 import up.pdp.apprecipes.security.JwtProvider;
 import up.pdp.apprecipes.service.UserService;
-import up.pdp.apprecipes.service.MailService;
 import up.pdp.apprecipes.exceptions.AlreadyExistsException;
 import up.pdp.apprecipes.utils.Validations;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final MailService mailService;
     private final PasswordEncoder passwordEncoder;
-    private final CodeRepository codeRepository;
-    private final AuthenticationProvider authenticationProvider;
     private final JwtProvider jwtProvider;
+    private final EmailService emailService;
     private final AttachmentRepository attachmentRepository;
-
-    @Override
-    public User loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.getByEmail(email);
-    }
-
-    @Override
-    public ApiResultDto<?> signIn(SignInDto signIn) {
-        try {
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    signIn.getEmail(),
-                    signIn.getPassword()
-            );
-            authenticationProvider.authenticate(authentication);
-            String token = jwtProvider.generateToken(signIn.getEmail());
-            return ApiResultDto.success(new TokenDto(token));
-        } catch (AuthenticationException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    public static final Map<String, User> TEMP_USERS = new HashMap<>();
 
     @SneakyThrows
     @Override
-    public ApiResultDto<?> signUp(SignUpDto signUp) {
-        if (!Objects.equals(signUp.getPassword(), signUp.getConfirmPassword())) {
+    public SuccessResponse signUp(SignUpDto signUp) {
+        if (!Objects.equals(signUp.getPassword(), signUp.getConfirmPassword()))
             throw new BadRequestException();
+        if (userRepository.findByEmail(signUp.getEmail()).isPresent())
+            throw new AlreadyExistsException("User");
+
+        emailService.send(signUp.getEmail());
+        TEMP_USERS.put(signUp.getEmail(),
+                User.builder()
+                        .email(signUp.getEmail())
+                        .name(signUp.getName())
+                        .password(passwordEncoder.encode(signUp.getPassword()))
+                        .build());
+
+        return new SuccessResponse("Email sent");
+    }
+
+    @Override
+    public JwtTokenDto verifyEmail(String email, Integer code) {
+        if (emailService.check(code, email)) {
+            User user = TEMP_USERS.get(email);
+            if (user == null)
+                throw new NotFoundException("User");
+            user.setEnable(true);
+            return new JwtTokenDto(jwtProvider.generateToken(userRepository.save(user)));
         }
-	if(userRepository.findByEmail(signUp.getEmail()).isPresent()){
- 	throw new AlreadyExistsException("User");
-}
-        User user = new User(
-                signUp.getEmail(),
-                passwordEncoder.encode(signUp.getPassword()),
-                signUp.getName(),
-                null,
-                null,
-                false,
-                false
+        throw new InvalidDataException("verification code");
+    }
+
+    @Override
+    public JwtTokenDto signIn(SignInDto signIn) {
+        User user = userRepository.findByEmail(signIn.getEmail()).orElseThrow(
+                () -> new NotFoundException("User")
         );
-        MailServiceImpl.TEMP_USERS.put(user.getEmail(),user);
-        mailService.sendVerify(signUp.getEmail());
-        return ApiResultDto.success("Verify email");
-    }
-
-    @Override
-    public ApiResultDto<?> verifyEmail(String email, String code) {
-        User user = userRepository.getByEmail(email);
-
-        Code codeEntity = codeRepository.getByEmail(email);
-
-        if (!codeEntity.getCodeString().equals(code)) {
-            if (codeEntity.getAttempt() == 1) {
-                codeRepository.delete(codeEntity);
-                userRepository.delete(user);
-                return ApiResultDto.error("Your attempt ended");
-            }
-            codeEntity.setAttempt(codeEntity.getAttempt() - 1);
-            codeRepository.save(codeEntity);
-            return ApiResultDto.error("Code not equals");
+        if (passwordEncoder.matches(signIn.getPassword(), user.getPassword())) {
+            return new JwtTokenDto(jwtProvider.generateToken(user));
         }
-
-        codeRepository.delete(codeEntity);
-
-        user.setEnable(true);
-        userRepository.save(user);
-
-        return ApiResultDto.success("Ok");
+        throw new InvalidDataException("password");
     }
 
     @Override
-    public ApiResultDto<?> update(UserCRUDDto crudDto) {
+    public UserDto getById(String id) {
+        return new UserDto(userRepository.findById(UUID.fromString(id)).orElseThrow(
+                () -> new NotFoundException("User")
+        ));
+    }
+
+    @Override
+    public UserDto update(UserCRUDDto crudDto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (crudDto.getAttachmentId() != null) {
             Optional<Attachment> attachment = attachmentRepository.findById(crudDto.getAttachmentId());
@@ -122,18 +97,17 @@ public class UserServiceImpl implements UserService {
         if (crudDto.getPassword() != null)
             user.setPassword(passwordEncoder.encode(crudDto.getPassword()));
 
-        userRepository.save(user);
-        return ApiResultDto.success("Ok");
+        return new UserDto(userRepository.save(user));
     }
 
     @Override
-    public ApiResultDto<?> delete(UserDeleteDto deleteDto) {
+    public SuccessResponse delete(UserDeleteDto deleteDto) {
         User byEmail = userRepository.getByEmail(deleteDto.getEmail());
         if (passwordEncoder.matches(deleteDto.getPassword(), byEmail.getPassword())) {
             userRepository.delete(byEmail);
-            return ApiResultDto.success("Ok");
+            return new SuccessResponse("Ok");
         }
-        return ApiResultDto.error("User could not be deleted");
+        return new SuccessResponse("User could not be deleted");
     }
 
 }
