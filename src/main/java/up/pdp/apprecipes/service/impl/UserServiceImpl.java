@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public JwtTokenDto signIn(SignInDto signIn) {
         User user = userRepository.findByEmail(signIn.getEmail()).orElseThrow(
-                () -> new NotFoundException("User")
+                () -> NotFoundException.error("User")
         );
         if (passwordEncoder.matches(signIn.getPassword(), user.getPassword())) {
             return new JwtTokenDto(jwtProvider.generateToken(user));
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getById(String id) {
         return new UserDto(userRepository.findById(UUID.fromString(id)).orElseThrow(
-                () -> new NotFoundException("User")
+                () -> NotFoundException.errorById("User", id)
         ));
     }
 
