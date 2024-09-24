@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     default User getByEmail(String email) {
         return findByEmail(email).orElseThrow(() -> new NotFoundException("User not found by email -> " + email));
     }
+
+    boolean existsByEmailAndDeletedFalse(String email);
 }

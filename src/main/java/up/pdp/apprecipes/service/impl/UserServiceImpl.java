@@ -24,7 +24,11 @@ import up.pdp.apprecipes.service.UserService;
 import up.pdp.apprecipes.exceptions.AlreadyExistsException;
 import up.pdp.apprecipes.utils.Validations;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -35,13 +39,13 @@ public class UserServiceImpl implements UserService {
     private final JwtProvider jwtProvider;
     private final EmailService emailService;
     private final AttachmentRepository attachmentRepository;
-    public static final Map<String, User> TEMP_USERS = new HashMap<>();
+    public static final Map<String, User> TEMP_USERS = new ConcurrentHashMap<>();
 
     @SneakyThrows
     @Override
     public SuccessResponse signUp(SignUpDto signUp) {
         if (!Objects.equals(signUp.getPassword(), signUp.getConfirmPassword()))
-            throw new BadRequestException();
+            throw new BadRequestException("Passwords do not match");
         if (userRepository.findByEmail(signUp.getEmail()).isPresent())
             throw new AlreadyExistsException("User");
 
@@ -105,7 +109,7 @@ public class UserServiceImpl implements UserService {
         User byEmail = userRepository.getByEmail(deleteDto.getEmail());
         if (passwordEncoder.matches(deleteDto.getPassword(), byEmail.getPassword())) {
             userRepository.delete(byEmail);
-            return new SuccessResponse("Ok");
+            return new SuccessResponse("User deleted successfully");
         }
         return new SuccessResponse("User could not be deleted");
     }
