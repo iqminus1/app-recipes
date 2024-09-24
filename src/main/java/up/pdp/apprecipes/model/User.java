@@ -1,10 +1,14 @@
 package up.pdp.apprecipes.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,7 +32,6 @@ import java.util.Objects;
 @SQLRestriction("deleted = false")
 @SQLDelete(sql = "update users set deleted = true where id = ?")
 public class User extends AbsUUIDEntity implements UserDetails, Serializable {
-    @Column(unique = true)
     private String email;
 
     private String password;
@@ -40,9 +43,9 @@ public class User extends AbsUUIDEntity implements UserDetails, Serializable {
 
     private String location;
 
-    private boolean enable;
+    private boolean enable = false;
 
-    private boolean admin;
+    private boolean admin = false;
 
 
     @Override
